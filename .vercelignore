@@ -1,0 +1,6 @@
+# Only index.html is the website. Everything else stays in the repo but is not published.
+DRE-Production.html
+dre-tim.html
+tools/
+supabase/
+xl_src/
