@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>DRE Production</title>
 <style>
 :root{color-scheme:light;
@@ -338,6 +338,10 @@ button.stask,button.papan{font-family:inherit}
   main{padding:12px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px))}
   .head{margin-bottom:10px;gap:8px}.head h1{font-size:20px}.head .sub{display:none}
   .head>input[type=search]{order:3;flex:1 1 100%;width:100%!important}
+  /* fixed scale: no pinch / double-tap zoom, no sideways drift; 16px inputs stop iPhone from zooming in on focus */
+  html,body{overflow-x:hidden;overscroll-behavior-x:none;touch-action:pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .chips,.scroll-x,.queue .list,.toolbar .segctl,.modal{touch-action:pan-x pan-y}
+  input,select,textarea{font-size:16px!important}
   .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px 2px}
   .chips::-webkit-scrollbar{display:none}
   .chip{flex:none}
