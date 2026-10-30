@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>DRE Production</title>
+<link rel="icon" type="image/webp" href="assets/dre-logo.webp">
 <style>
 :root{color-scheme:light;
   --bg:#f4f3ef; --panel:#ffffff; --ink:#1d1f1c; --muted:#6c6f68; --line:#e3e1da; --soft:#efeee8;
@@ -20,7 +21,9 @@ button{cursor:pointer}
 /* NAV */
 .nav{width:210px;flex:none;background:#173f30;color:#e8f1ec;padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
 .logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
-.logo-mark{width:34px;height:34px;border-radius:9px;background:radial-gradient(circle at 30% 30%,#f2b84b 0 18%,transparent 19%),radial-gradient(circle at 70% 60%,#e2574c 0 16%,transparent 17%),radial-gradient(circle at 40% 75%,#5fb6e8 0 14%,transparent 15%),radial-gradient(circle at 75% 25%,#fff 0 10%,transparent 11%),#2e8a63}
+/* DRÉ wordmark: the source images are 2000px squares with the mark slightly above centre, so zoom and position into it */
+.logo-mark{width:34px;height:34px;border-radius:9px;background:#fff url(assets/dre-logo.webp) 49.4% 35.2%/215% no-repeat;box-shadow:inset 0 0 0 1px var(--line)}
+.nav .logo-mark{background:rgba(255,255,255,.08) url(assets/dre-logo-white.webp) 49.4% 35.2%/215% no-repeat;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
 .logo b{display:block;font-size:15px;letter-spacing:.2px}.logo small{opacity:.65;font-size:11.5px}
 .nav-btn{display:flex;align-items:center;gap:10px;border:0;background:none;color:inherit;text-align:left;padding:10px 12px;border-radius:9px;opacity:.78;font-weight:500}
 .nav-btn:hover{background:rgba(255,255,255,.07);opacity:1}
