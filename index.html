@@ -317,6 +317,66 @@ input[type=email],input[type=password]{border:1px solid var(--line);background:#
   .proj-h .progs{width:100%}
   .datenav .d{min-width:0}
 }
+.mtop,.mtoggle,.mfilter,.addtask,.dstrip,.mdate,.mhead,.mb{display:none}
+.as-proj{margin-bottom:14px}.as-ph{margin-bottom:6px;font-size:13.5px}
+.as-b{padding:8px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:#fcfbf9}
+.as-b .papans{margin-top:6px}
+button.stask,button.papan{font-family:inherit}
+.mmenu{display:flex;flex-direction:column;gap:8px}.mmenu .btn{justify-content:flex-start;padding:12px 14px;font-size:15px}
+@keyframes sheet{from{transform:translateY(48px);opacity:.5}}
+@media (max-width:820px){
+  .mtop{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:30;background:var(--bg);padding:10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));border-bottom:1px solid var(--line)}
+  .mtop .logo-mark{width:30px;height:30px;border-radius:8px;flex:none}
+  .mtop b{font-size:14px;display:block;line-height:1.2}
+  .mtop .msync{font-size:11px;color:var(--muted)}
+  .mtop .icon-btn{font-size:22px;padding:4px 10px;margin-left:auto;color:var(--ink)}
+  .app.signed-out .mtop{display:none}
+  .nav-btn[data-page="settings"],.nav-logout{display:none!important}
+  .nav{gap:2px;justify-content:stretch}
+  .nav-btn{flex:1;min-width:0;padding:7px 2px;white-space:nowrap;border-radius:10px}
+  .nav-btn svg{width:21px;height:21px}
+  main{padding:12px max(16px, env(safe-area-inset-right, 0px)) 96px max(16px, env(safe-area-inset-left, 0px))}
+  .head{margin-bottom:10px;gap:8px}.head h1{font-size:20px}.head .sub{display:none}
+  .head>input[type=search]{order:3;flex:1 1 100%;width:100%!important}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px 2px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none}
+  .kpis{gap:8px;margin:10px 0}.kpi{padding:10px 12px}.kpi .v{font-size:21px}
+  .kpis .kpi:last-child:nth-child(odd){grid-column:1/-1}
+  .segs{gap:8px}.seg{padding:12px}.seg .t{flex-direction:column;align-items:flex-start;gap:0}
+  .mfilter{display:inline-flex}
+  .toolbar{gap:8px}
+  .toolbar .tgroup{display:none}
+  .toolbar.open .tgroup{display:flex;width:100%}
+  .toolbar .tgroup .segctl{flex:1;overflow-x:auto}
+  .toolbar .tlabel{width:62px;flex:none}
+  .vtoggle{display:none}
+  .tiles{grid-template-columns:1fr;gap:10px}.tile{min-height:0;padding:12px}
+  .mhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}.mhead h1{font-size:20px;margin:0}
+  .dstrip{display:flex;gap:4px;align-items:stretch;margin:0 -6px 6px}
+  .dnav{border:0;background:none;color:var(--muted);font-size:22px;padding:0 4px;flex:none}
+  .dpill{flex:1;min-width:0;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:6px 0 9px;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--muted);font-size:11px;position:relative}
+  .dpill b{font-size:16px;color:var(--ink)}
+  .dpill.today::after{content:"";position:absolute;bottom:3px;width:5px;height:5px;border-radius:50%;background:var(--brand)}
+  .dpill.on{background:var(--ink);border-color:var(--ink);color:#d9d9d4}.dpill.on b{color:#fff}
+  .mdate{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:2px 0 10px}
+  .mtoggle{display:flex;align-items:center;gap:8px;width:100%;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 14px;font-weight:650;font-size:14px;margin-bottom:10px;box-shadow:var(--shadow);color:var(--ink)}
+  .mtoggle .grow{flex:1}.mtoggle .chev{transition:transform .15s}.mtoggle.on .chev{transform:rotate(180deg)}
+  .mhidden{display:none!important}
+  .queue{max-height:65vh;margin-bottom:10px}
+  .board{grid-template-columns:1fr!important;overflow:visible;gap:10px}
+  .col{min-width:0;min-height:0;padding:10px}
+  .col-h select{font-size:13px;padding:5px 26px 5px 8px}
+  .addtask{display:flex;width:100%;justify-content:center;margin-bottom:6px;padding:9px}
+  .dk{display:none}.mb{display:inline}
+  .pcard{padding:10px}.pcard input[type=checkbox]{width:20px;height:20px}
+  .overlay{place-items:end center;padding:0}
+  .modal,.modal.wide{width:100%;max-width:none;border-radius:18px 18px 0 0;max-height:90vh;animation:sheet .2s ease-out}
+  .modal-f{padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px))}
+  .stask,.papan{padding:8px 11px;font-size:13px}
+  .share-card{padding:14px;border-radius:14px}.sh-top h2{font-size:17px}
+  .toast{bottom:88px}
+}
 @media print{
   .nav,.queue,.no-print,.addline,.banner{display:none!important}
   main{padding:0}.plot{display:block}
@@ -341,6 +401,7 @@ input[type=email],input[type=password]{border:1px solid var(--line);background:#
     <button class="nav-btn nav-logout" data-act="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg>Keluar</button>
     <div class="nav-foot" id="syncState">Menghubungkan…</div>
   </nav>
+  <header class="mtop"><div class="logo-mark"></div><div><b>Dit Reveille</b><div class="msync" id="mSync"></div></div><button class="icon-btn" data-act="mMenu" aria-label="Menu">☰</button></header>
   <main id="view"></main>
 </div>
 <div id="modal-root"></div>
@@ -506,6 +567,7 @@ function writeErr(e){
 function setSync(txt){
   const el = document.getElementById('syncState'); if (!el) return;
   el.textContent = (ME ? (ME.name || ME.email) + ' · ' : '') + (ROLE ? ROLE_LABEL[ROLE] + ' · ' : '') + (txt || (READY ? '● Tersinkron dengan tim' : 'Menghubungkan…'));
+  const m = document.getElementById('mSync'); if (m) m.textContent = (ROLE ? ROLE_LABEL[ROLE] + ' · ' : '') + (txt || (READY ? '● Tersinkron' : 'Menghubungkan…'));
 }
 // a change from a teammate must not wipe what this person is typing
 function remoteRender(){
@@ -655,6 +717,10 @@ UI.plotView = lsGet('dre-plotview') || 'week';
 UI.projView = lsGet('dre-projview') || 'grid';
 // a link ending in #hariini opens straight on the share card
 UI.shareDate = today(); UI.shareDone = true;
+// phones get a simpler layout (day strip, stacked columns, tap-to-assign); re-render when crossing the breakpoint
+const MQ = window.matchMedia('(max-width:820px)');
+const isMobile = () => MQ.matches;
+(MQ.addEventListener ? MQ.addEventListener('change', () => render()) : MQ.addListener(() => render()));
 if (location.hash === '#hariini') UI.page = 'today';
 UI.pStatus = 'all'; UI.openProj = null; UI.qOwner = 'all'; UI.sel = new Set(); UI.selMode = false; UI.panelOpen = new Set(); UI.queueOpen = new Set();
 UI.panelView = (() => { try { return localStorage.getItem('dre-panelview'); } catch(e) { return null; } })() || 'week';
@@ -856,14 +922,14 @@ PAGES.projects = () => {
   const q = UI.pq.toLowerCase();
   const list = S.projects.filter(p => !!p.archived === UI.showArchived && (UI.fOwner === 'all' || p.owner === UI.fOwner) && (UI.fCat === 'all' || p.cat === UI.fCat)
     && (UI.pStatus === 'all' || (UI.pStatus === 'live') === isLive(p)) && (!q || projName(p).toLowerCase().includes(q)));
-  const grid = UI.projView === 'grid', nDraft = S.projects.filter(p => !p.archived && !isLive(p)).length;
+  const grid = UI.projView === 'grid' || isMobile(), nDraft = S.projects.filter(p => !p.archived && !isLive(p)).length;
   const filtered = UI.fOwner !== 'all' || UI.fCat !== 'all' || UI.pStatus !== 'all' || UI.pq;
   UI._list = list.map(p => p.id);
   const empty = `<div class="empty">${UI.showArchived ? 'Arsip kosong.' : S.projects.length ? 'Tidak ada proyek untuk filter ini.' : 'Belum ada proyek. Klik <b>+ Proyek baru</b>.'}</div>`;
   return `<div class="head"><div><h1>Proyek</h1><div class="sub">${grid ? 'Klik kotak proyek untuk lihat detail batch & tahapan.' : 'Klik kotak tahapan untuk menjadwalkan ke karyawan atau menandai selesai.'}</div></div><div class="grow"></div>
       <input type="search" id="pq" data-in="pq" placeholder="Cari proyek…" value="${esc(UI.pq)}" style="width:200px">
       <button class="btn pri" data-act="newProj">+ Proyek baru</button></div>
-    <div class="card toolbar">${projFilters(nDraft)}<div class="grow"></div>
+    <div class="card toolbar ${UI.mFilters ? 'open' : ''}"><button class="btn sm mfilter ${filtered ? 'on-dark' : ''}" data-act="mFilters">⚲ Filter${filtered ? ' aktif' : ''}</button>${projFilters(nDraft)}<div class="grow"></div>
       <button class="btn sm ${UI.selMode ? 'on-dark' : ''}" data-act="selMode" title="Pilih beberapa proyek sekaligus">☑ Pilih</button>
       ${(() => { const ck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'; return `<div class="vtoggle" role="group" aria-label="Tampilan proyek"><button class="${grid ? '' : 'on'}" data-act="projView" data-v="list" title="Tampilan detail" aria-pressed="${!grid}">${grid ? '' : ck}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button><button class="${grid ? 'on' : ''}" data-act="projView" data-v="grid" title="Tampilan kotak" aria-pressed="${grid}">${grid ? ck : ''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.2"/></svg></button></div>`; })()}
       <button class="btn sm ${UI.showArchived ? 'on-dark' : ''}" data-act="toggleArchived">${UI.showArchived ? '← Proyek aktif' : 'Arsip'}</button></div>
@@ -957,7 +1023,7 @@ function plotTitle(x){
   const t = taskByKey(x.key); return t ? t.step + ' - ' + projName(t.p) : '(proyek dihapus)';
 }
 PAGES.plot = () => {
-  const week = UI.plotView === 'week';
+  const mob = isMobile(), week = UI.plotView === 'week' && !mob;
   const pm = plotMap(), d = UI.date, q = UI.q.toLowerCase();
   const queue = tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && batchOn(t.p, t.b) && (UI.qCat === 'all' || t.p.cat === UI.qCat) && (UI.qOwner === 'all' || t.p.owner === UI.qOwner) && (!q || (t.step + ' ' + projName(t.p)).toLowerCase().includes(q)));
   const groups = {}; queue.forEach(t => (groups[t.p.id] = groups[t.p.id] || []).push(t));
@@ -999,18 +1065,19 @@ PAGES.plot = () => {
     return `<div class="col ${a === 'Gamasuk' ? 'absent' : ''}" data-drop="emp" data-emp="${e.id}">
       <div class="col-h"><div class="av" style="background:${e.color};width:26px;height:26px;font-size:11px">${initials(e.name)}</div><div><div class="n">${esc(e.name)}</div><div class="colcount">${dn}/${pl.length} selesai</div></div>
         <select data-ch="att" data-emp="${e.id}" class="no-print">${ATT.map(o => `<option ${o === a ? 'selected' : ''}>${o}</option>`).join('')}</select></div>
-      ${cards || `<div class="small muted" style="text-align:center;padding:18px 6px">Tarik tugas ke sini<br>atau klik tugas di antrian</div>`}
-      <div class="addline"><input type="text" list="qt" placeholder="+ Tugas lain (Enter)" data-addcustom="${e.id}"></div></div>`;
+      ${cards || `<div class="small muted" style="text-align:center;padding:18px 6px"><span class="dk">Tarik tugas ke sini<br>atau klik tugas di antrian</span><span class="mb">Belum ada tugas</span></div>`}
+      <div class="addline"><button class="btn sm addtask" data-act="pickFor" data-emp="${e.id}">+ Tugas dari antrian</button><input type="text" list="qt" placeholder="+ Tugas lain (Enter)" data-addcustom="${e.id}"></div></div>`;
   }).join('');
-  return `<div class="head"><div><h1>Plotting</h1><div class="sub">${week ? 'Tarik tugas ke hari & orangnya. Klik nama hari untuk lihat detail harian.' : 'Tarik tugas dari antrian ke karyawan. Centang kalau sudah selesai.'}</div></div><div class="grow"></div>
+  return `${mob ? `<div class="mhead"><h1>Plotting</h1><div class="grow"></div>${d !== today() ? '<button class="btn sm" data-act="dateToday">Hari ini</button>' : ''}</div>${dayStrip(d, 'plotDay')}<div class="mdate">${fmtLong(d)}</div>` : `<div class="head"><div><h1>Plotting</h1><div class="sub">${week ? 'Tarik tugas ke hari & orangnya. Klik nama hari untuk lihat detail harian.' : 'Tarik tugas dari antrian ke karyawan. Centang kalau sudah selesai.'}</div></div><div class="grow"></div>
       <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="plotView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="plotView" data-v="day">Harian</button></div>
       <div class="datenav"><button class="btn sm" data-act="dateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="dateShift" data-n="1">›</button>
       ${d !== today() ? `<button class="btn sm" data-act="dateToday">Hari ini</button>` : ''}<input type="date" value="${d}" data-ch="date"></div>
-      <button class="btn sm no-print" data-act="print">🖨 Cetak</button></div>
+      <button class="btn sm no-print" data-act="print">🖨 Cetak</button></div>`}
     ${overdue.length ? `<div class="banner">⚠️ <b>${overdue.length} tugas</b> dari hari sebelumnya belum dicentang selesai.<div class="grow"></div><button class="btn sm" data-act="carry">Pindahkan ke ${fmtDate(d)}</button></div>` : ''}
     <datalist id="qt">${S.quickTasks.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
     <div class="plot">
-      <section class="card queue" data-drop="queue">
+      ${mob ? `<button class="mtoggle ${UI.mQueue ? 'on' : ''}" data-act="mQueue">📋 Antrian tugas <span class="badge">${queue.length}</span><span class="grow"></span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></button>` : ''}
+      <section class="card queue ${mob && !UI.mQueue ? 'mhidden' : ''}" data-drop="queue">
         <div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Antrian tugas</h2><span class="badge">${queue.length} tugas</span></div>
           ${qGroups.length ? `<div class="small muted" style="display:flex;gap:6px">${qGroups.length} proyek<div class="grow"></div>${q ? '' : `<button class="linkbtn" data-act="queueAll">${qAllOpen ? 'Tutup semua' : 'Buka semua'}</button>`}</div>` : ''}
           <input type="search" id="q" data-in="q" placeholder="Cari tahapan / proyek…" value="${esc(UI.q)}">
@@ -1056,7 +1123,7 @@ function miniCard(x){
 
 /* ---------- PANEL ---------- */
 PAGES.panel = () => {
-  const d = UI.panelDate, week = UI.panelView === 'week';
+  const d = UI.panelDate, mob = isMobile(), week = UI.panelView === 'week' && !mob;
   const needs = [];
   liveProjects().forEach(p => p.batches.forEach((b, bi) => {
     if (!batchOn(p, b)) return;
@@ -1087,15 +1154,16 @@ PAGES.panel = () => {
       <button class="icon-btn" data-act="delPanel" data-id="${x.id}">✕</button></div>`; }).join('');
     const tot = list.reduce((a, x) => a + (+x.qty || 0), 0);
     return `<div class="col" data-drop="machine" data-m="${m.id}"><div class="col-h"><div><div class="n">${esc(m.name)}</div><div class="colcount">${tot} panel</div></div></div>
-      ${cards || '<div class="small muted" style="text-align:center;padding:18px 6px">Tarik kebutuhan panel ke sini</div>'}
-      <div class="addline"><button class="btn sm" style="width:100%" data-act="addStock" data-m="${m.id}">+ Panel stok / manual</button></div></div>`;
+      ${cards || '<div class="small muted" style="text-align:center;padding:18px 6px"><span class="dk">Tarik kebutuhan panel ke sini</span><span class="mb">Belum ada jadwal</span></div>'}
+      <div class="addline"><button class="btn sm addtask" data-act="pickPapan" data-m="${m.id}">+ Papan dari kebutuhan</button><button class="btn sm" style="width:100%" data-act="addStock" data-m="${m.id}">+ Panel stok / manual</button></div></div>`;
   }).join('');
-  return `<div class="head"><div><h1>Production Panel</h1><div class="sub">Jadwal cetak panel per mesin. Panel yang dicentang otomatis menambah "Panel Done" di proyek.</div></div><div class="grow"></div>
+  return `${mob ? `<div class="mhead"><h1>Panel</h1><div class="grow"></div>${d !== today() ? '<button class="btn sm" data-act="pdateToday">Hari ini</button>' : ''}</div>${dayStrip(d, 'panelDay')}<div class="mdate">${fmtLong(d)}</div>` : `<div class="head"><div><h1>Production Panel</h1><div class="sub">Jadwal cetak panel per mesin. Panel yang dicentang otomatis menambah "Panel Done" di proyek.</div></div><div class="grow"></div>
       <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="panelView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="panelView" data-v="day">Harian</button></div>
       <div class="datenav"><button class="btn sm" data-act="pdateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="pdateShift" data-n="1">›</button>
-      ${d !== today() ? '<button class="btn sm" data-act="pdateToday">Hari ini</button>' : ''}<input type="date" value="${d}" data-ch="pdate"></div></div>
+      ${d !== today() ? '<button class="btn sm" data-act="pdateToday">Hari ini</button>' : ''}<input type="date" value="${d}" data-ch="pdate"></div></div>`}
     <div class="plot">
-      <section class="card queue" data-drop="pqueue"><div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Kebutuhan panel</h2><span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span></div>
+      ${mob ? `<button class="mtoggle ${UI.mNeeds ? 'on' : ''}" data-act="mNeeds">📦 Kebutuhan panel <span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span><span class="grow"></span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></button>` : ''}
+      <section class="card queue ${mob && !UI.mNeeds ? 'mhidden' : ''}" data-drop="pqueue"><div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Kebutuhan panel</h2><span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span></div>
         ${groups.length ? `<div class="small muted" style="display:flex;gap:6px">${groups.length} proyek<div class="grow"></div><button class="linkbtn" data-act="panelAll">${allOpen ? 'Tutup semua' : 'Buka semua'}</button></div>` : ''}</div>
         <div class="list">${qhtml || '<div class="empty">Semua kebutuhan panel sudah terjadwal 👍</div>'}</div></section>
       ${week ? panelWeek() : `<section class="board" style="grid-template-columns:repeat(${S.machines.length},minmax(220px,1fr))">${cols}</section>`}
@@ -1125,6 +1193,46 @@ function panelMini(x){
   return `<div class="mcard ${x.done ? 'done' : ''}" draggable="true" data-drag="panel" data-id="${x.id}" style="--c:var(--amber)" title="${esc((x.no ? 'Papan #' + x.no + ' ' : x.qty + ' × ') + x.pattern + ' · ' + x.size + ' — ' + src)}">
     <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="panelDone" data-id="${x.id}"><div class="tx"><b>${x.no ? esc(x.pattern) + ' #' + x.no : x.qty + ' × ' + esc(x.pattern)}</b><div class="s">${esc(x.size)} · ${esc(src)}</div></div>
     <button class="icon-btn no-print" data-act="delPanel" data-id="${x.id}" title="Hapus dari jadwal">✕</button></div>`;
+}
+
+// a week of days centred on the selected one; tapping a day selects it
+function dayStrip(sel, act){
+  const t = today(), days = Array.from({length: 7}, (_, i) => addDays(sel, i - 3));
+  return `<div class="dstrip"><button class="dnav" data-act="${act}" data-d="${addDays(sel, -7)}" aria-label="Minggu sebelumnya">‹</button>${days.map(d => {
+    const dt = new Date(d + 'T00:00');
+    return `<button class="dpill ${d === sel ? 'on' : ''} ${d === t ? 'today' : ''}" data-act="${act}" data-d="${d}"><span>${dt.toLocaleDateString('id-ID', {weekday: 'short'})}</span><b>${dt.getDate()}</b></button>`;
+  }).join('')}<button class="dnav" data-act="${act}" data-d="${addDays(sel, 7)}" aria-label="Minggu berikutnya">›</button></div>`;
+}
+// pick tasks from the queue for one employee on the selected day (works without drag & drop)
+function openAssignSheet(empId){
+  const e = emp(empId), pm = plotMap(), groups = [];
+  tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && batchOn(t.p, t.b)).forEach(t => {
+    t.wait = waitingFor(t, pm);
+    let g = groups.find(x => x.p === t.p); if (!g) groups.push(g = {p: t.p, batches: []});
+    let b = g.batches.find(x => x.b === t.b); if (!b) g.batches.push(b = {b: t.b, bi: t.bi, items: []});
+    b.items.push(t);
+  });
+  const body = groups.map(g => `<div class="as-proj"><div class="as-ph"><span class="badge b-${g.p.cat}">${CAT_SHORT[g.p.cat]}</span> <b>${esc(projName(g.p))}</b></div>`
+    + g.batches.sort((a, b) => a.bi - b.bi).map(bt => `<div class="as-b"><div class="small muted">${batchLabel(g.p, bt.bi)} · ${esc(papanLabel(g.p, bt.b))}${bt.b.product ? ' · ' + esc(bt.b.product) : ''}</div>
+      <div class="papans">${bt.items.sort((a, b) => a.steps.indexOf(a.step) - b.steps.indexOf(b.step)).map(t => `<button class="stask ${t.wait ? 'wait' : ''}" style="--c:${stepColor(t.step)}" data-act="assignTo" data-key="${esc(t.key)}" data-emp="${empId}">${t.wait ? '⏳ ' : ''}${esc(t.step)}</button>`).join('')}</div></div>`).join('') + '</div>').join('');
+  modal(`Tugas untuk ${esc(e.name)}`, `<div class="small muted" style="margin:-4px 0 12px">${fmtLong(UI.date)} · ketuk tahapan untuk menugaskan, bisa beberapa sekaligus. ⏳ = tahap sebelumnya belum selesai.</div>${body || '<div class="empty">Antrian kosong 👍</div>'}`,
+    '<button class="btn pri" data-act="closeModal">Selesai</button>');
+}
+// pick single boards for one machine on the selected day
+function openPapanSheet(mid){
+  const m = S.machines.find(x => x.id === mid), groups = [];
+  liveProjects().forEach(p => p.batches.forEach((b, bi) => {
+    if (!batchOn(p, b)) return;
+    const rem = needOf(p, b) - panelDone(b) - panelPlanned(b);
+    if (rem <= 0) return;
+    let g = groups.find(x => x.p === p); if (!g) groups.push(g = {p, items: []});
+    g.items.push({b, bi, rem});
+  }));
+  const body = groups.map(g => `<div class="as-proj"><div class="as-ph"><b>${esc(projName(g.p))}</b> <span class="small muted">${esc(g.p.size || '')}</span></div>`
+    + g.items.map(n => `<div class="as-b"><div class="small muted"><b style="color:var(--ink)">${esc(n.b.pattern || g.p.pattern || '?')}</b> · ${batchLabel(g.p, n.bi)} · sisa ${n.rem}</div>
+      <div class="papans">${freePapanNos(g.p, n.b, n.rem).map(no => `<button class="papan" data-act="papanTo" data-pid="${g.p.id}" data-bid="${n.b.id}" data-no="${no}" data-m="${mid}">#${no}</button>`).join('')}</div></div>`).join('') + '</div>').join('');
+  modal(`Papan untuk ${esc(m.name)}`, `<div class="small muted" style="margin:-4px 0 12px">${fmtLong(UI.panelDate)} · ketuk nomor papan untuk dijadwalkan, bisa beberapa sekaligus.</div>${body || '<div class="empty">Semua kebutuhan panel sudah terjadwal 👍</div>'}`,
+    '<button class="btn pri" data-act="closeModal">Selesai</button>');
 }
 
 /* ---------- HARI INI (share card) ---------- */
@@ -1442,6 +1550,18 @@ const ACT = {
     UI.authMode = 'login'; UI.authMsg = ''; toast('Password baru disimpan'); render();
   },
   logout: async () => { await sb.auth.signOut(); location.reload(); },
+  plotDay: d => { UI.date = d.d; render(); },
+  panelDay: d => { UI.panelDate = d.d; render(); },
+  mQueue: () => { UI.mQueue = !UI.mQueue; render(); },
+  mNeeds: () => { UI.mNeeds = !UI.mNeeds; render(); },
+  mFilters: () => { UI.mFilters = !UI.mFilters; render(); },
+  pickFor: d => openAssignSheet(d.emp),
+  assignTo: d => { assignTask(d.key, d.emp, UI.date); openAssignSheet(d.emp); },
+  pickPapan: d => openPapanSheet(d.m),
+  papanTo: d => { addNeedToMachine(d.pid, d.bid, d.m, UI.panelDate, 1, d.no); openPapanSheet(d.m); },
+  mMenu: () => modal('Menu', `<div class="small muted" style="margin:-4px 0 12px">${esc(ME ? (ME.name || ME.email) : '')}${ROLE ? ' · ' + ROLE_LABEL[ROLE] : ''}</div>
+    <div class="mmenu">${canSee('settings') ? '<button class="btn" data-act="mGo" data-page="settings">⚙️ Pengaturan</button>' : ''}<button class="btn" data-act="logout">↪ Keluar</button></div>`),
+  mGo: d => { closeModal(); ACT.page({page: d.page}); },
   pdateToday: () => { UI.panelDate = today(); render(); },
   panelView: d => { UI.panelView = d.v; try { localStorage.setItem('dre-panelview', d.v); } catch(e) {} render(); },
   openPanelDay: d => { UI.panelDate = d.d; UI.panelView = 'day'; render(); window.scrollTo(0, 0); },
