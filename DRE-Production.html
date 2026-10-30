@@ -1,0 +1,1331 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRE Production</title>
+<style>
+:root{
+  --bg:#f4f3ef; --panel:#ffffff; --ink:#1d1f1c; --muted:#6c6f68; --line:#e3e1da; --soft:#efeee8;
+  --brand:#1f6f4f; --brand-soft:#e3f1ea; --blue:#2f63c9; --blue-soft:#e6eefc; --green:#2b9461; --green-soft:#e2f4ea;
+  --amber:#c27c12; --amber-soft:#fbf0dc; --red:#c8432f; --red-soft:#fbe6e2;
+  --r:12px; --shadow:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+/* NAV */
+.nav{width:210px;flex:none;background:#173f30;color:#e8f1ec;padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:radial-gradient(circle at 30% 30%,#f2b84b 0 18%,transparent 19%),radial-gradient(circle at 70% 60%,#e2574c 0 16%,transparent 17%),radial-gradient(circle at 40% 75%,#5fb6e8 0 14%,transparent 15%),radial-gradient(circle at 75% 25%,#fff 0 10%,transparent 11%),#2e8a63}
+.logo b{display:block;font-size:15px;letter-spacing:.2px}.logo small{opacity:.65;font-size:11.5px}
+.nav-btn{display:flex;align-items:center;gap:10px;border:0;background:none;color:inherit;text-align:left;padding:10px 12px;border-radius:9px;opacity:.78;font-weight:500}
+.nav-btn:hover{background:rgba(255,255,255,.07);opacity:1}
+.nav-btn.on{background:rgba(255,255,255,.14);opacity:1}
+.nav-btn svg{width:18px;height:18px;flex:none}
+.nav-foot{margin-top:auto;font-size:11.5px;opacity:.55;padding:8px}
+main{flex:1;min-width:0;padding:22px 26px 60px}
+/* COMMON */
+h1{font-size:22px;margin:0;letter-spacing:-.2px}
+h2{font-size:15px;margin:0 0 10px}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.head .sub{color:var(--muted);font-size:13px}
+.grow{flex:1}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.btn{border:1px solid var(--line);background:var(--panel);padding:8px 13px;border-radius:9px;font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{background:var(--soft)}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}.btn.pri:hover{filter:brightness(1.08)}
+.btn.sm{padding:5px 9px;font-size:12.5px;border-radius:7px}
+.btn.danger{color:var(--red)}
+.btn.ghost{border-color:transparent;background:none}.btn.ghost:hover{background:var(--soft)}
+.icon-btn{border:0;background:none;padding:4px 6px;border-radius:6px;color:var(--muted);line-height:1}
+.icon-btn:hover{background:var(--soft);color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{border:1px solid var(--line);background:var(--panel);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:500;color:var(--muted)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips .sep{width:1px;height:20px;background:var(--line);margin:0 4px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.b-client{background:#fdecd9;color:#9a5a12}.b-internal{background:#e7e9fb;color:#3f4aa8}
+.b-FN{background:var(--brand-soft);color:var(--brand)}.b-KYPT{background:#f7e6f1;color:#9b3a77}
+.b-late{background:var(--red-soft);color:var(--red)}.b-soon{background:var(--amber-soft);color:var(--amber)}
+.b-live{background:var(--green-soft);color:var(--green)}.b-draft{background:#ecebe6;color:#6c6f68;box-shadow:inset 0 0 0 1px #d5d2c8}
+.btn.go{background:var(--green);border-color:var(--green);color:#fff}.btn.go:hover{filter:brightness(1.08)}
+.btn.stop{background:var(--red);border-color:var(--red);color:#fff}.btn.stop:hover{filter:brightness(1.08)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;align-items:start}
+.tiles>.proj{grid-column:1/-1;margin:0;box-shadow:0 0 0 2px var(--ink),var(--shadow)}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;min-height:190px;transition:border-color .15s}
+.tile:hover{border-color:#bcbab1}
+.tile.draft{background:#fbfaf7;border-style:dashed}
+.tile .name{font-weight:650;font-size:15px;line-height:1.25}
+.tile .prog{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.tile .prog .pl{width:56px}.tile .prog .bar{flex:1}.tile .prog .pv{min-width:34px;text-align:right;font-variant-numeric:tabular-nums}
+.tile-foot{margin-top:auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:10px 12px;margin-bottom:10px}
+.tgroup{display:flex;align-items:center;gap:8px}
+.toolbar .segctl button{flex:none;white-space:nowrap}
+.tlabel{font-size:11px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.segctl .cnt{display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--amber-soft);color:var(--amber);font-size:11px;line-height:17px}
+.btn.on-dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.linkbtn{border:0;background:none;padding:0;font:inherit;color:var(--blue);cursor:pointer;text-decoration:underline}
+.bulkbar{position:sticky;top:8px;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:12px;padding:8px 10px 8px 14px;margin-bottom:12px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.bulkbar .btn:not(.go):not(.stop){background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}
+.tile.sel,.proj.sel{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue)}
+.selbox{width:18px;height:18px;border-radius:5px;border:2px solid #b9b6ac;display:inline-grid;place-items:center;flex:none;background:#fff;font-size:12px;font-weight:700;line-height:1}
+.selbox.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.qfilters{display:flex;flex-direction:column;gap:6px}
+.qrow{display:flex;align-items:center;gap:8px}
+.qrow .tlabel{width:60px;flex:none}
+.qseg{flex:1}
+.qseg button{padding:5px 4px;font-size:12px;white-space:nowrap}
+.share-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow);max-width:1150px}
+.sh-top{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.sh-top .logo-mark{width:40px;height:40px;border-radius:11px;flex:none}
+.sh-brand{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.8px}
+.sh-top h2{margin:2px 0 0;font-size:20px;letter-spacing:-.2px}
+.sh-sum{font-size:13px;color:var(--muted)}.sh-sum b{color:var(--ink);font-size:17px}
+.sh-sec{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:18px 0 8px}
+.sh-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;align-items:start}
+.sh-col{border:1px solid var(--line);border-radius:12px;padding:10px;background:#faf9f6}
+.sh-col.absent{opacity:.55}
+.sh-eh{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:14px}
+.sh-eh .av{width:28px;height:28px;font-size:11.5px}
+.sh-n{margin-left:auto;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.sh-col ol{margin:0;padding:0;list-style:none;counter-reset:n;display:flex;flex-direction:column;gap:6px}
+.sh-col li{counter-increment:n;position:relative;padding:6px 8px 6px 28px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--c,#9a9a9a);border-radius:8px;font-size:12.5px;line-height:1.3}
+.sh-col li::before{content:counter(n);position:absolute;left:9px;top:6px;font-weight:700;color:var(--muted);font-size:12px}
+.sh-col li b{display:block;font-size:13px}
+.sh-col li span{color:var(--muted);font-size:11.5px}
+.sh-col li.done{opacity:.5}.sh-col li.done b{text-decoration:line-through}
+.sh-col li.none{border-style:dashed;border-left-width:1px;color:var(--muted);padding-left:10px;background:none}.sh-col li.none::before{content:none}
+.sh-foot{margin-top:14px;font-size:11px;color:var(--muted);text-align:right}
+.pgroup{border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:10px;margin:7px 0;background:#fff;overflow:hidden}
+.pg-h{display:flex;align-items:center;gap:8px;width:100%;border:0;background:none;padding:9px 10px;text-align:left;font-size:13px}
+.pg-h:hover{background:var(--soft)}
+.pg-h .s{display:block;font-size:11.5px;color:var(--muted);font-weight:400}
+.pg-h .chev{flex:none;color:var(--muted);transition:transform .15s}
+.pgroup:not(.open) .pg-h .chev{transform:rotate(-90deg)}
+.pg-sum{display:flex;flex-wrap:wrap;gap:4px;padding:0 10px 9px 32px}
+.pchip{font-size:11.5px;background:var(--soft);border-radius:6px;padding:2px 7px;color:var(--muted)}.pchip b{color:var(--ink)}
+.task.pg-item{width:calc(100% - 16px);margin:0 8px 6px;padding:6px 8px}
+.pg-batch{margin:0 8px 8px;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:#fcfbf9}
+.pg-bh{font-size:12.5px;margin-bottom:6px}.pg-bh .s{color:var(--muted);font-size:11.5px}
+.papans{display:flex;flex-wrap:wrap;gap:4px}
+.papan{min-width:34px;padding:4px 6px;text-align:center;font-size:11.5px;font-weight:650;font-variant-numeric:tabular-nums;border-radius:6px;background:var(--amber-soft);color:#7a4e09;border:1px solid #efd3a3;cursor:grab;user-select:none}
+.papan:hover{background:#f6e2bd;border-color:var(--amber)}
+.papan.dragging{opacity:.4}
+.stask{padding:4px 8px 4px 9px;font-size:12px;font-weight:650;border-radius:6px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);color:var(--ink);cursor:grab;user-select:none;white-space:nowrap}
+.stask:hover{border-color:var(--c);box-shadow:var(--shadow)}
+.stask.wait{color:var(--muted);font-weight:500;background:#f6f5f1}
+.stask.dragging{opacity:.4}
+.pgroup.qg .pg-h .s{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px}
+.vtoggle{display:inline-flex;border:1px solid #74777f;border-radius:999px;overflow:hidden;height:34px;background:var(--panel)}
+.vtoggle button{border:0;background:none;display:flex;align-items:center;justify-content:center;gap:3px;padding:0 14px;min-width:56px;color:var(--ink)}
+.vtoggle button+button{border-left:1px solid #74777f}
+.vtoggle button:hover{background:var(--soft)}
+.vtoggle button.on{background:#d6e3ff;color:#0b1d3a}
+.vtoggle svg{width:18px;height:18px;flex:none}
+.muted{color:var(--muted)}.small{font-size:12.5px}
+input[type=text],input[type=number],input[type=date],input[type=search],select,textarea{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;width:100%;outline:none}
+select{appearance:none;-webkit-appearance:none;padding-right:30px;cursor:pointer;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236c6f68' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+label.f{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .d{background:var(--green)}.bar .p{background:#8fb0ee}
+.empty{padding:26px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:var(--r)}
+/* DASHBOARD */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0}
+.kpi{padding:14px 16px}
+.kpi .v{font-size:26px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.kpi .l{font-size:12.5px;color:var(--muted);margin-top:2px}
+.segs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.seg{cursor:pointer;transition:border-color .15s}
+.seg:hover{border-color:#bcbab1}
+.seg.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.seg .t{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.seg .t b{font-size:14px}
+.seg .row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:8px 0 4px}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-bottom:14px}
+.steprow{display:grid;grid-template-columns:110px 1fr 54px;gap:10px;align-items:center;margin:7px 0;font-size:13px}
+.steprow .bar{height:12px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.emp-today{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--soft)}
+.emp-today:first-of-type{border-top:0}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:12.5px;flex:none}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+.tbl td{padding:10px;border-bottom:1px solid var(--soft);vertical-align:middle}
+.tbl tr.click{cursor:pointer}.tbl tr.click:hover td{background:#faf9f6}
+.scroll-x{overflow-x:auto}
+/* PROJECTS */
+.proj{margin-bottom:12px;padding:0;overflow:hidden}
+.proj-h{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;flex-wrap:wrap}
+.proj-h .name{font-weight:650;font-size:15px}
+.proj-h .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.proj-h .progs{width:250px;display:flex;flex-direction:column;gap:5px}
+.proj-h .prog{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.proj-h .prog .pl{width:58px;font-size:11.5px}
+.proj-h .prog .pv{min-width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.pcsrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding:8px 10px;background:#f7e6f1;border-radius:10px}
+.pcs-l{font-weight:650;font-size:13px;color:#9b3a77}
+.numin{width:52px!important;padding:4px 4px!important;text-align:center;font-weight:600}
+.proj-h .prog .bar{flex:1}
+.proj-b{border-top:1px solid var(--line);padding:12px 16px 14px;background:#fcfbf9}
+.chev{transition:transform .15s;color:var(--muted)}
+.closed .chev{transform:rotate(-90deg)}
+table.matrix{border-collapse:separate;border-spacing:4px;font-size:12.5px}
+.matrix th{font-size:11.5px;font-weight:600;color:var(--muted);text-align:center;padding:2px 4px;white-space:nowrap}
+.matrix .pcol{padding-right:10px}
+.matrix .bl{display:flex;align-items:center;gap:6px}
+.bchip{border:1px solid #c9c6bc;background:#fff;color:var(--muted);border-radius:999px;font-size:10.5px;font-weight:650;padding:1px 7px;white-space:nowrap}
+.bchip:hover{border-color:var(--green);color:var(--green)}
+.bchip.on{background:var(--green-soft);border-color:#bfe3cf;color:var(--green)}
+.bchip.on:hover{background:var(--red-soft);border-color:#f0c4bb;color:var(--red)}
+.matrix tr.b-off .cell,.matrix tr.b-off .panelctl{opacity:.45}
+.matrix th.l,.matrix td.l{text-align:left;white-space:nowrap;padding-right:10px}
+.cell{width:100%;min-width:92px;height:40px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:11.5px;line-height:1.2;padding:2px 6px;color:var(--muted)}
+.cell:hover{border-color:#a9a79e}
+.cell.planned{background:var(--blue-soft);border-color:#c5d5f6;color:var(--blue);font-weight:600}
+.cell.done{background:var(--green-soft);border-color:#bfe3cf;color:var(--green);font-weight:700}
+.cell.late{background:var(--red-soft);border-color:#f0c4bb;color:var(--red)}
+.panelctl{display:flex;align-items:center;gap:4px;justify-content:center;white-space:nowrap}
+.panelctl b{min-width:44px;text-align:center}
+.proj-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+/* PLOTTING */
+.datenav{display:flex;align-items:center;gap:6px}
+.datenav .d{font-weight:650;font-size:15px;min-width:190px;text-align:center}
+.datenav input[type=date]{width:150px}
+.banner{display:flex;align-items:center;gap:10px;background:var(--amber-soft);border:1px solid #f0d6a4;color:#7a4e09;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13.5px;flex-wrap:wrap}
+.plot{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start}
+.queue{position:sticky;top:12px;max-height:calc(100vh - 24px);display:flex;flex-direction:column;padding:12px}
+.queue .qhead{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.queue .list{overflow-y:auto;flex:1;margin:0 -4px;padding:0 4px}
+.queue.drop-on{outline:2px dashed var(--red);outline-offset:-4px}
+.qgroup{margin:10px 0 4px;font-size:12px;font-weight:650;color:var(--muted);display:flex;gap:6px;align-items:center}
+.task{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:4px solid var(--c,#888);border-radius:8px;padding:7px 9px;margin:5px 0;font-size:12.5px;cursor:grab;user-select:none}
+.task:hover{box-shadow:var(--shadow);border-color:#cfcdc5;border-left-color:var(--c)}
+.task b{font-size:13px}
+.task .s{color:var(--muted);font-size:11.5px}
+.task .wait{color:var(--amber);font-size:11px;font-weight:600}
+.task.dragging{opacity:.4}
+.board{display:grid;gap:12px;overflow-x:auto;padding-bottom:6px}
+.col{background:#ebeae4;border-radius:var(--r);padding:10px;min-height:340px;display:flex;flex-direction:column;min-width:220px}
+.col.drop-on{background:#dfeee6;outline:2px dashed var(--brand);outline-offset:-3px}
+.col-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.col-h .n{font-weight:650}
+.col-h select{width:auto;padding:3px 24px 3px 8px;background-position:right 7px center;font-size:12px;border-radius:7px;margin-left:auto}
+.col.absent{opacity:.6}
+.pcard{background:#fff;border-radius:9px;border:1px solid var(--line);border-left:4px solid var(--c,#888);padding:8px 8px 8px 10px;margin-bottom:7px;display:flex;gap:8px;align-items:flex-start;cursor:grab;font-size:12.5px}
+.pcard.done{opacity:.6}.pcard.done .tx b{text-decoration:line-through}
+.pcard input[type=checkbox]{width:17px;height:17px;margin:1px 0 0;accent-color:var(--green);flex:none;cursor:pointer}
+.pcard .tx{flex:1;min-width:0}
+.pcard .tx .s{color:var(--muted);font-size:11.5px}
+.pcard .qtyin{width:56px;padding:2px 6px;font-size:12px;display:inline-block}
+.addline{margin-top:auto;padding-top:6px}
+.addline input{background:rgba(255,255,255,.7);font-size:12.5px;padding:7px 9px}
+.colcount{font-size:11.5px;color:var(--muted)}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(20,24,20,.38);display:grid;place-items:center;z-index:50;padding:16px;animation:fade .12s}
+.modal{background:#fff;border-radius:14px;width:min(560px,100%);max-height:calc(100vh - 32px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal.wide{width:min(760px,100%)}
+.modal-h{padding:16px 18px 6px;display:flex;align-items:flex-start;gap:10px}
+.modal-h h3{margin:0;font-size:17px;flex:1}
+.modal-b{padding:8px 18px 14px}
+.modal-f{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:#fff}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .full{grid-column:1/-1}
+.segctl{display:flex;background:var(--soft);border-radius:9px;padding:3px;gap:3px}
+.segctl button{flex:1;border:0;background:none;padding:7px 10px;border-radius:7px;font-weight:600;color:var(--muted)}
+.segctl button.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.checks label{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:13px;cursor:pointer;background:#fff}
+.checks label.on{border-color:var(--brand);background:var(--brand-soft)}
+.checks input{accent-color:var(--brand)}
+.btable{width:100%;border-collapse:collapse;font-size:13px}
+.btable td,.btable th{padding:4px 6px 4px 0;text-align:left}
+.btable th{font-size:11.5px;color:var(--muted);font-weight:600}
+.emp-pick{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}
+.emp-pick button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 10px;font-weight:600;text-align:left}
+.emp-pick button:hover{border-color:var(--brand);background:var(--brand-soft)}
+.emp-pick .av{width:26px;height:26px;font-size:11.5px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:#1d1f1c;color:#fff;padding:10px 16px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:.2s;z-index:60}
+.toast.show{opacity:1;transform:translateX(-50%)}
+/* SETTINGS */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.srow{display:flex;gap:8px;align-items:center;margin:6px 0}
+.srow input[type=color]{width:34px;height:34px;padding:2px;border:1px solid var(--line);border-radius:8px;background:#fff;flex:none}
+.taglist{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tag{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 4px 4px 9px;font-size:13px}
+.help{background:var(--brand-soft);border-radius:10px;padding:12px 14px;font-size:13px;color:#24503d}
+.help ol{margin:6px 0 0;padding-left:18px}
+/* WEEK PLOT */
+.plot>*{min-width:0}
+.seg-sm button{padding:5px 12px;font-size:13px}
+.week{display:grid;gap:6px;overflow-x:auto;padding-bottom:6px}
+.wk-h{display:flex;align-items:center;gap:8px;padding:2px 4px 4px}
+.wk-day{border:0;background:none;text-align:left;padding:8px;border-radius:10px;display:flex;flex-direction:column;gap:1px;font-size:12px;color:var(--muted);align-self:stretch}
+.wk-day b{color:var(--ink);font-size:13px}
+.wk-day:hover{background:var(--soft)}
+.wk-day.today{background:var(--brand-soft);color:var(--brand)}.wk-day.today b{color:var(--brand)}
+.wk-day em{font-style:normal;font-size:11px;font-weight:700}
+.wk-day.off{opacity:.55}
+.wk-cell{background:#ebeae4;border-radius:10px;padding:6px;min-height:70px;display:flex;flex-direction:column;gap:4px}
+.wk-cell.drop-on{background:#dfeee6;outline:2px dashed var(--brand);outline-offset:-3px}
+.wk-cell.absent{opacity:.55}
+.mcard{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c,#888);border-radius:7px;padding:4px 3px 4px 6px;display:flex;gap:6px;align-items:flex-start;font-size:12px;line-height:1.25;cursor:grab}
+.mcard input{width:14px;height:14px;margin:1px 0 0;accent-color:var(--green);flex:none;cursor:pointer}
+.mcard .tx{flex:1;min-width:0}
+.mcard .s{color:var(--muted);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard.done{opacity:.55}.mcard.done b{text-decoration:line-through}
+.mcard .icon-btn{padding:0 3px;font-size:11px;visibility:hidden}
+.mcard:hover .icon-btn{visibility:visible}
+.wk-add{margin-top:auto;border:1px dashed #cfccc2;background:none;color:var(--muted);border-radius:6px;font-size:11.5px;padding:3px;opacity:0}
+.wk-cell:hover .wk-add,.wk-add:focus{opacity:1}
+@media (hover:none){.wk-add{opacity:1}.mcard .icon-btn{visibility:visible}}
+@keyframes fade{from{opacity:0}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.segs{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+@media (max-width:820px){
+  .app{flex-direction:column}
+  .nav{width:auto;height:auto;flex-direction:row;position:fixed;bottom:0;left:0;right:0;top:auto;z-index:40;padding:6px;justify-content:space-around}
+  .logo,.nav-foot{display:none}
+  .nav-btn{flex-direction:column;gap:2px;font-size:10.5px;padding:6px 8px}
+  main{padding:16px 16px 90px}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .plot{grid-template-columns:1fr}
+  .queue{position:static;max-height:360px}
+  .sgrid,.fgrid{grid-template-columns:1fr}
+  .proj-h .progs{width:100%}
+  .datenav .d{min-width:0}
+}
+@media print{
+  .nav,.queue,.no-print,.addline,.banner{display:none!important}
+  main{padding:0}.plot{display:block}
+  .board{overflow:visible}
+  .col{background:#fff;border:1px solid #999;min-height:0;break-inside:avoid}
+  .pcard{border:1px solid #999}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav">
+    <div class="logo"><div class="logo-mark"></div><div><b>Dit Reveille</b><small>Production</small></div></div>
+    <button class="nav-btn" data-act="page" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Dashboard</button>
+    <button class="nav-btn" data-act="page" data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M8.5 7V5a1.5 1.5 0 0 1 1.5-1.5h4A1.5 1.5 0 0 1 15.5 5v2"/><path d="M4 12h16"/></svg>Proyek</button>
+    <button class="nav-btn" data-act="page" data-page="plot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><path d="M16 6.5h5M16 10.5h5M17.5 14.5h3.5"/></svg>Plotting</button>
+    <button class="nav-btn" data-act="page" data-page="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="11" width="18" height="5" rx="1"/><path d="M7 20h10"/></svg>Panel</button>
+    <button class="nav-btn" data-act="page" data-page="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>Hari Ini</button>
+    <button class="nav-btn" data-act="page" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 15H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1A2 2 0 1 1 7 5.4l.1.1A1.6 1.6 0 0 0 9.8 4.4V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>Pengaturan</button>
+    <div class="nav-foot">Data tersimpan otomatis di browser ini. Backup rutin di Pengaturan.</div>
+  </nav>
+  <main id="view"></main>
+</div>
+<div id="modal-root"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ============ DATA & UTIL ============ */
+const LS_KEY = 'dre-production-v1';
+const DEF_STEPS = {
+  FN: ['CNC Plastic','CNC Kayu','Amplas Plastic','Amplas Kayu','Dempul','Cat Dasar','Cat Primer','Finishing','Solder','Assembly'],
+  KYPT: ['Amplas','CNC','Finishing','Assembly']
+};
+const CAT_LABEL = {FN:'Furniture', KYPT:'Keychain & Petite'};
+const CAT_SHORT = {FN:'FN', KYPT:'KY&PT'};
+const OWNER_LABEL = {client:'Client', internal:'Internal'};
+const ATT = ['Masuk','Telat','Lembur','Gamasuk'];
+const EMP_COLORS = ['#2f63c9','#c24f8a','#2b9461','#c27c12','#7a52c7','#d1493b','#178a99','#6b7280'];
+
+const uid = () => Math.random().toString(36).slice(2, 9);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+const today = () => iso(new Date());
+const addDays = (s, n) => { const d = new Date(s + 'T00:00'); d.setDate(d.getDate() + n); return iso(d); };
+const daysTo = s => Math.round((new Date(s + 'T00:00') - new Date(today() + 'T00:00')) / 864e5);
+const fmtDate = (s, opt) => s ? new Date(s + 'T00:00').toLocaleDateString('id-ID', opt || {day:'numeric', month:'short'}) : '';
+const fmtLong = s => fmtDate(s, {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+const initials = n => (n || '?').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+function stepColor(step){
+  const s = step.toLowerCase();
+  if (s.includes('cnc')) return '#2f63c9';
+  if (s.includes('amplas')) return '#c27c12';
+  if (s.includes('cat') || s.includes('dempul')) return '#c24f8a';
+  if (s.includes('finish')) return '#2b9461';
+  if (s.includes('solder')) return '#d1493b';
+  if (s.includes('assembly')) return '#7a52c7';
+  return '#6b7280';
+}
+
+function seed(){
+  const t = today();
+  const E = [{id:'e1',name:'Aan',color:'#2f63c9',active:true},{id:'e2',name:'Wahyu',color:'#c24f8a',active:true},{id:'e3',name:'Ketrin',color:'#2b9461',active:true}];
+  const B = (qty, panelNeeded, panelDoneManual = 0, pattern = '') => ({id:uid(), qty, panelNeeded, panelDoneManual, pattern});
+  const P = (o) => Object.assign({id:uid(), archived:false, createdAt:Date.now(), notes:'', woodNeeded:0, woodStock:0, client:'', deadline:''}, o);
+  const cimb = P({owner:'client',cat:'FN',client:'CIMB',name:'Dropbox',qty:3,pattern:'Merah Kartu',size:'10mm',deadline:addDays(t,14),
+    steps:['CNC Plastic','Amplas Plastic','Cat Primer','Finishing','Assembly'],batches:[B(1,12,12),B(1,12),B(1,12)]});
+  const erm = P({owner:'client',cat:'KYPT',client:'ERM',name:'Circle Sticker',qty:2,pattern:'Putih Hijau Muda',size:'5mm',deadline:addDays(t,6),steps:[...DEF_STEPS.KYPT],batches:[B(2,2)]});
+  const kaisar = P({owner:'client',cat:'KYPT',client:'Kaisar',name:'Coaster Lune',qty:1,pattern:'Dysnomie',size:'10mm',deadline:addDays(t,9),steps:[...DEF_STEPS.KYPT],batches:[B(1,1)]});
+  const medy = P({owner:'client',cat:'KYPT',client:'Medyocer',name:'Medali',qty:1,pattern:'Rhea',size:'7mm',deadline:addDays(t,3),steps:[...DEF_STEPS.KYPT],batches:[B(1,1)]});
+  const ocean = P({owner:'internal',cat:'FN',name:'Urbaine Ocean',qty:5,pattern:'Nebula',size:'20mm',steps:['CNC Plastic','Amplas Plastic','Finishing','Assembly'],batches:[B(2,2),B(2,2),B(1,1)]});
+  const soleil = P({owner:'internal',cat:'FN',name:'Urbaine Soleil',qty:5,pattern:'io',size:'20mm',steps:['CNC Plastic','Amplas Plastic','Finishing','Assembly'],batches:[B(2,2),B(2,2),B(1,1)]});
+  const lamp = P({owner:'internal',cat:'FN',name:'Table Lamp',qty:5,pattern:'Bening',size:'5mm',steps:['CNC Plastic','Amplas Plastic','Solder','Assembly'],batches:[B(2,2),B(2,2),B(1,1)]});
+  const locean = P({owner:'internal',cat:'KYPT',name:'Charm LOCEAN',qty:3,pattern:'Orange, White Pink, Blue White',size:'5mm',steps:[...DEF_STEPS.KYPT],
+    batches:[B(1,1,1,'Orange'),B(1,1,0,'White Pink'),B(1,1,1,'Blue White')]});
+  const crois = P({owner:'internal',cat:'KYPT',name:'Charm Croissant & Cup',qty:2,pattern:'io',size:'5mm',steps:[...DEF_STEPS.KYPT],batches:[B(1,1,0,'io'),B(1,1,0,'Atlas')]});
+  const cheese = P({owner:'internal',cat:'KYPT',name:'Coaster Cheese',qty:2,pattern:'Yellow',size:'10mm',steps:[...DEF_STEPS.KYPT],batches:[B(2,2)]});
+  const lune = P({owner:'internal',cat:'KYPT',name:'Coaster Lune',qty:2,pattern:'Dione & Ariel',size:'10mm',steps:[...DEF_STEPS.KYPT],batches:[B(2,1)]});
+  const projects = [cimb, erm, kaisar, medy, ocean, soleil, lamp, locean, crois, cheese, lune];
+  const k = (p, i, s) => p.id + '|' + p.batches[i].id + '|' + s;
+  const doneManual = {};
+  [k(cimb,0,'CNC Plastic'), k(cimb,0,'Amplas Plastic'), k(locean,0,'Amplas'), k(locean,0,'CNC'), k(locean,0,'Finishing'), k(locean,2,'Amplas'), k(locean,2,'CNC')].forEach(x => doneManual[x] = true);
+  const plots = [
+    {id:uid(),type:'task',key:k(locean,1,'Amplas'),emp:'e1',date:t,done:false},
+    {id:uid(),type:'task',key:k(locean,1,'CNC'),emp:'e1',date:t,done:false},
+    {id:uid(),type:'custom',text:'Bersih-bersih Lapak',emp:'e1',date:t,done:false},
+    {id:uid(),type:'custom',text:'Cacah - Biru Muda',emp:'e2',date:t,done:false},
+    {id:uid(),type:'task',key:k(locean,2,'Finishing'),emp:'e2',date:t,done:false},
+    {id:uid(),type:'custom',text:'Bersih-bersih Lapak',emp:'e2',date:t,done:false},
+    {id:uid(),type:'task',key:k(cimb,0,'Cat Primer'),emp:'e2',date:addDays(t,-1),done:false},
+  ];
+  const panels = [
+    {id:uid(),date:t,machine:'m1',pattern:'Dione',size:'10mm',qty:1,pid:lune.id,batchId:lune.batches[0].id,done:false},
+    {id:uid(),date:t,machine:'m1',pattern:'Ariel',size:'10mm',qty:1,pid:'',batchId:'',done:false},
+    {id:uid(),date:t,machine:'m1',pattern:'Dysnomie',size:'10mm',qty:1,pid:kaisar.id,batchId:kaisar.batches[0].id,done:false},
+  ];
+  return {
+    version:1, employees:E, steps:JSON.parse(JSON.stringify(DEF_STEPS)),
+    machines:[{id:'m1',name:'Mesin Kecil'},{id:'m2',name:'Mesin Besar'},{id:'m3',name:'Cooling'}],
+    sizes:['5mm','7mm','10mm','20mm'],
+    quickTasks:['Bersih-bersih Lapak','Cacah','Pilah & Cuci','Cutting'],
+    projects, plots, doneManual, panels, attendance:{}
+  };
+}
+
+function load(){ try { const s = JSON.parse(localStorage.getItem(LS_KEY)); return s && s.version ? s : null; } catch(e) { return null; } }
+let S = load() || seed();
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e) { toast('Gagal menyimpan: ' + e.message); } }
+save();
+
+const UI = {page: localStorage.getItem('dre-page') || 'dashboard', fOwner:'all', fCat:'all', date:today(), panelDate:today(), q:'', qCat:'all', pq:'', showArchived:false, collapsed:{}};
+UI.plotView = (() => { try { return localStorage.getItem('dre-plotview'); } catch(e) { return null; } })() || 'week';
+UI.projView = (() => { try { return localStorage.getItem('dre-projview'); } catch(e) { return null; } })() || 'grid';
+// a link ending in #hariini opens straight on the share card
+UI.shareDate = today(); UI.shareDone = true;
+if (location.hash === '#hariini') UI.page = 'today';
+UI.pStatus = 'all'; UI.openProj = null; UI.qOwner = 'all'; UI.sel = new Set(); UI.selMode = false; UI.panelOpen = new Set(); UI.queueOpen = new Set();
+UI.panelView = (() => { try { return localStorage.getItem('dre-panelview'); } catch(e) { return null; } })() || 'week';
+
+/* ============ DERIVED ============ */
+const emp = id => S.employees.find(e => e.id === id);
+const activeEmps = () => S.employees.filter(e => e.active);
+const projName = p => p.owner === 'client' && p.client ? p.client + ' - ' + p.name : p.name;
+const orderSteps = (p) => S.steps[p.cat].filter(s => p.steps.includes(s)).concat(p.steps.filter(s => !S.steps[p.cat].includes(s)));
+const plotMap = () => { const m = {}; S.plots.forEach(x => { if (x.type === 'task') m[x.key] = x; }); return m; };
+
+function taskStatus(key, pm){
+  const pl = pm[key];
+  if (S.doneManual[key] || (pl && pl.done)) return 'done';
+  return pl ? 'planned' : 'todo';
+}
+function tasksOf(projects, pm = plotMap()){
+  const out = [];
+  projects.forEach(p => {
+    const steps = orderSteps(p);
+    p.batches.forEach((b, bi) => steps.forEach((step, si) => {
+      const key = p.id + '|' + b.id + '|' + step;
+      out.push({key, p, b, bi, step, si, steps, status: taskStatus(key, pm), plot: pm[key]});
+    }));
+  });
+  return out;
+}
+function taskByKey(key){
+  const [pid, bid, step] = key.split('|');
+  const p = S.projects.find(x => x.id === pid); if (!p) return null;
+  const bi = p.batches.findIndex(b => b.id === bid); if (bi < 0) return null;
+  return {key, p, b: p.batches[bi], bi, step, steps: orderSteps(p)};
+}
+const panelDone = b => (b.panelDoneManual || 0) + S.panels.filter(x => x.batchId === b.id && x.done).reduce((a, x) => a + (+x.qty || 0), 0);
+const panelPlanned = b => S.panels.filter(x => x.batchId === b.id && !x.done).reduce((a, x) => a + (+x.qty || 0), 0);
+function projStats(p, pm = plotMap()){
+  const ts = tasksOf([p], pm);
+  const done = ts.filter(t => t.status === 'done').length, planned = ts.filter(t => t.status === 'planned').length;
+  const pn = p.batches.reduce((a, b) => a + (needOf(p, b)), 0);
+  const pd = p.batches.reduce((a, b) => a + Math.min(panelDone(b), needOf(p, b)), 0);
+  return {total: ts.length, done, planned, todo: ts.length - done - planned, pct: pct(done, ts.length), pn, pd};
+}
+// a batch is measured in boards (papan); very old batches only stored qty
+function needOf(p, b){ return +(b.panelNeeded != null ? b.panelNeeded : b.qty) || 0; }
+// project name plus the batch's own product type, when a multi-colour project has one
+// e.g. "12 papan Merah Kartu", so whoever does the task knows which boards to take
+const papanLabel = (p, b) => needOf(p, b) + ' papan' + ((b.pattern || p.pattern) ? ' ' + (b.pattern || p.pattern) : '');
+const prodName = (p, b) => projName(p) + (b && b.product ? ' – ' + b.product : '');
+const panelTotal = p => p.batches.reduce((a, b) => a + needOf(p, b), 0);
+// real finished pieces are counted by hand per project; target is the project qty
+const sumB = (p, k) => p.batches.reduce((a, b) => a + (+b[k] || 0), 0);
+const pcsStats = p => ({good: p.good != null ? +p.good : sumB(p, 'good'), target: +p.qty || 0});
+function shortfall(p, pm = plotMap()){
+  // pieces still missing once every batch has gone through all its steps
+  const steps = orderSteps(p);
+  const allDone = p.batches.length && p.batches.every(b => steps.every(s => taskStatus(p.id + '|' + b.id + '|' + s, pm) === 'done'));
+  const ps = pcsStats(p); return allDone ? Math.max(0, ps.target - ps.good) : 0;
+}
+const pcsBar = (good, target) => `<div class="bar"><i class="d" style="width:${pct(Math.min(good, target), target)}%;background:#9b3a77"></i></div>`;
+// a project only feeds Plotting & Panel once someone presses "Mulai produksi" (older projects count as started)
+const isLive = p => p.live !== false;
+const liveProjects = () => activeProjects().filter(isLive);
+// internal projects start each batch on its own (older batches count as started); client batches simply follow the project
+const batchOn = (p, b) => p.owner !== 'internal' || b.live !== false;
+const batchCount = p => isLive(p) && p.batches.some(b => !batchOn(p, b)) ? `${p.batches.filter(b => batchOn(p, b)).length}/${p.batches.length} batch jalan` : `${p.batches.length} batch`;
+const statusBadge = p => isLive(p) ? '<span class="badge b-live">On going</span>' : '<span class="badge b-draft">Belum mulai</span>';
+const activeProjects = () => S.projects.filter(p => !p.archived);
+const filteredProjects = () => activeProjects().filter(p => (UI.fOwner === 'all' || p.owner === UI.fOwner) && (UI.fCat === 'all' || p.cat === UI.fCat));
+function waitingFor(t, pm){
+  // previous step in the batch that is not done yet (a hint, never a block)
+  for (let i = t.steps.indexOf(t.step) - 1; i >= 0; i--) {
+    const k = t.p.id + '|' + t.b.id + '|' + t.steps[i];
+    if (taskStatus(k, pm) !== 'done') return t.steps[i];
+  }
+  return null;
+}
+const batchLabel = (p, bi) => p.batches.length > 1 ? 'Batch ' + (bi + 1) : 'Batch';
+function deadlineBadge(p, st){
+  if (!p.deadline || (st && st.pct === 100)) return '';
+  const d = daysTo(p.deadline);
+  if (d < 0) return `<span class="badge b-late">Telat ${-d} hr</span>`;
+  if (d <= 7) return `<span class="badge b-soon">${d === 0 ? 'Hari ini' : d + ' hr lagi'}</span>`;
+  return `<span class="badge">${fmtDate(p.deadline)}</span>`;
+}
+const progBar = (done, planned, total) => `<div class="bar"><i class="d" style="width:${pct(done,total)}%"></i><i class="p" style="width:${pct(planned,total)}%"></i></div>`;
+
+/* ============ RENDER ============ */
+function render(){
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('on', b.dataset.page === UI.page));
+  const a = document.activeElement, id = a && a.id, pos = a && a.selectionStart;
+  document.getElementById('view').innerHTML = PAGES[UI.page]();
+  if (id) { const el = document.getElementById(id); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch(e){} } }
+}
+const chip = (k, v, label) => `<button class="chip ${UI[k] === v ? 'on' : ''}" data-act="setf" data-k="${k}" data-v="${v}">${label}</button>`;
+const filterChips = () => `<div class="chips">${chip('fOwner','all','Semua')}${chip('fOwner','client','Client')}${chip('fOwner','internal','Internal')}<span class="sep"></span>${chip('fCat','all','Semua kategori')}${chip('fCat','FN','Furniture (FN)')}${chip('fCat','KYPT','Keychain & Petite')}</div>`;
+
+const PAGES = {};
+
+/* ---------- DASHBOARD ---------- */
+PAGES.dashboard = () => {
+  const pm = plotMap(), ps = filteredProjects(), ts = tasksOf(ps, pm);
+  const done = ts.filter(t => t.status === 'done').length, planned = ts.filter(t => t.status === 'planned').length, todo = ts.length - done - planned;
+  let pn = 0, pd = 0; ps.forEach(p => p.batches.forEach(b => { pn += needOf(p, b); pd += Math.min(panelDone(b), needOf(p, b)); }));
+  const stats = new Map(ps.map(p => [p, projStats(p, pm)]));
+  const urgent = ps.filter(p => p.deadline && daysTo(p.deadline) <= 7 && stats.get(p).pct < 100).length;
+  const t = today();
+
+  const segs = [['client','FN'],['client','KYPT'],['internal','FN'],['internal','KYPT']].map(([o, c]) => {
+    const sp = activeProjects().filter(p => p.owner === o && p.cat === c);
+    const st = tasksOf(sp, pm); const sd = st.filter(x => x.status === 'done').length, spl = st.filter(x => x.status === 'planned').length;
+    let n = 0, d = 0; sp.forEach(p => p.batches.forEach(b => { n += needOf(p, b); d += Math.min(panelDone(b), needOf(p, b)); }));
+    const on = UI.fOwner === o && UI.fCat === c;
+    return `<div class="card seg ${on ? 'on' : ''}" data-act="seg" data-o="${o}" data-c="${c}">
+      <div class="t"><b>${OWNER_LABEL[o]} · ${CAT_SHORT[c]}</b><span class="muted small">${sp.length} proyek</span></div>
+      <div class="row"><span>Tahapan</span><span>${sd}/${st.length} · ${pct(sd, st.length)}%</span></div>${progBar(sd, spl, st.length)}
+      <div class="row"><span>Panel</span><span>${d}/${n}</span></div><div class="bar"><i class="d" style="width:${pct(d, n)}%;background:var(--amber)"></i></div>
+      ${(() => { let g = 0, tg = 0; sp.forEach(p => { const s = pcsStats(p); g += Math.min(s.good, s.target); tg += s.target; }); return `<div class="row"><span>Pcs jadi</span><span>${g}/${tg}</span></div>${pcsBar(g, tg)}`; })()}
+    </div>`;
+  }).join('');
+
+  // bottleneck per step
+  const stepNames = [...new Set([...S.steps.FN, ...S.steps.KYPT])];
+  const agg = stepNames.map(s => ({s, todo: ts.filter(t => t.step === s && t.status === 'todo').length, planned: ts.filter(t => t.step === s && t.status === 'planned').length})).filter(x => x.todo + x.planned > 0);
+  const max = Math.max(1, ...agg.map(x => x.todo + x.planned));
+  const stepRows = agg.length ? agg.map(x => `<div class="steprow"><span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${stepColor(x.s)};margin-right:6px"></span>${esc(x.s)}</span>
+    <div class="bar" style="background:none"><i style="width:${x.planned / max * 100}%;background:#8fb0ee"></i><i style="width:${x.todo / max * 100}%;background:#cfccc2"></i></div>
+    <span class="small muted" style="text-align:right">${x.todo + x.planned}</span></div>`).join('')
+    + `<div class="legend"><span><i style="background:#cfccc2"></i>Belum dijadwalkan</span><span><i style="background:#8fb0ee"></i>Sudah diplot</span></div>`
+    : `<div class="empty">Semua tahapan beres 🎉</div>`;
+
+  // today per employee
+  const todayRows = activeEmps().map(e => {
+    const pl = S.plots.filter(x => x.date === t && x.emp === e.id);
+    const att = (S.attendance[t] || {})[e.id] || 'Masuk';
+    const d = pl.filter(x => x.done).length;
+    return `<div class="emp-today"><div class="av" style="background:${e.color}">${initials(e.name)}</div>
+      <div class="grow"><b>${esc(e.name)}</b> <span class="badge ${att === 'Gamasuk' ? 'b-late' : att === 'Telat' ? 'b-soon' : ''}">${att}</span>
+      <div class="small muted">${pl.length ? pl.slice(0, 3).map(x => esc(plotTitle(x))).join(' · ') + (pl.length > 3 ? ' …' : '') : 'Belum ada tugas'}</div></div>
+      <div style="width:70px"><div class="small muted" style="text-align:right">${d}/${pl.length}</div><div class="bar"><i class="d" style="width:${pct(d, pl.length)}%"></i></div></div></div>`;
+  }).join('');
+
+  // project table
+  const sorted = [...ps].sort((a, b) => (stats.get(a).pct === 100) - (stats.get(b).pct === 100) || (a.deadline || '9999').localeCompare(b.deadline || '9999'));
+  const rows = sorted.map(p => { const st = stats.get(p); return `<tr class="click" data-act="openProj" data-id="${p.id}">
+    <td><b>${esc(projName(p))}</b><div class="small muted">${esc(p.pattern || '')} ${p.size ? '· ' + esc(p.size) : ''}</div></td>
+    <td><span class="badge b-${p.owner}">${OWNER_LABEL[p.owner]}</span> <span class="badge b-${p.cat}">${CAT_SHORT[p.cat]}</span></td>
+    <td>${p.qty} pcs</td>
+    <td style="min-width:150px">${progBar(st.done, st.planned, st.total)}<div class="small muted">${st.done}/${st.total} tahap · ${st.pct}%</div><div class="small" style="color:#9b3a77">Jadi ${pcsStats(p).good}/${p.qty} pcs</div></td>
+    <td>${st.pn ? st.pd + '/' + st.pn : '–'}</td>
+    <td>${deadlineBadge(p, st) || (st.pct === 100 ? '<span class="badge" style="background:var(--green-soft);color:var(--green)">Selesai</span>' : '–')}</td></tr>`; }).join('');
+
+  // per client
+  const clients = {};
+  ps.filter(p => p.owner === 'client').forEach(p => { const k = p.client || '(tanpa nama)'; (clients[k] = clients[k] || []).push(p); });
+  const clientRows = Object.entries(clients).map(([c, list]) => {
+    let tot = 0, d = 0, pl = 0; list.forEach(p => { const s = stats.get(p); tot += s.total; d += s.done; pl += s.planned; });
+    return `<div class="emp-today"><div class="av" style="background:#9a5a12">${initials(c)}</div><div class="grow"><b>${esc(c)}</b><div class="small muted">${list.map(p => esc(p.name)).join(', ')}</div></div>
+      <div style="width:110px"><div class="small muted" style="text-align:right">${pct(d, tot)}%</div>${progBar(d, pl, tot)}</div></div>`;
+  }).join('');
+
+  // attendance this month
+  const ym = t.slice(0, 7);
+  const attRows = activeEmps().map(e => {
+    const c = {Telat:0, Lembur:0, Gamasuk:0};
+    Object.entries(S.attendance).forEach(([d, m]) => { if (d.startsWith(ym) && m[e.id] && c[m[e.id]] !== undefined) c[m[e.id]]++; });
+    return `<tr><td><b>${esc(e.name)}</b></td><td>${c.Telat}</td><td>${c.Lembur}</td><td>${c.Gamasuk}</td></tr>`;
+  }).join('');
+
+  return `<div class="head"><div><h1>Dashboard Produksi</h1><div class="sub">${fmtLong(t)}</div></div><div class="grow"></div>
+      <button class="btn" data-act="page" data-page="plot">Buka Plotting Hari Ini →</button></div>
+    ${filterChips()}
+    <div class="kpis">
+      <div class="card kpi"><div class="v">${ps.length}</div><div class="l">Proyek aktif</div></div>
+      <div class="card kpi"><div class="v">${pct(done, ts.length)}%</div><div class="l">Tahapan selesai (${done}/${ts.length})</div></div>
+      <div class="card kpi"><div class="v" style="color:${todo ? 'var(--amber)' : 'inherit'}">${todo}</div><div class="l">Tahapan belum diplot</div></div>
+      <div class="card kpi"><div class="v">${pd}<span class="muted" style="font-size:16px">/${pn}</span></div><div class="l">Panel selesai</div></div>
+      <div class="card kpi"><div class="v" style="color:${urgent ? 'var(--red)' : 'inherit'}">${urgent}</div><div class="l">Deadline ≤ 7 hari</div></div>
+    </div>
+    <div class="segs">${segs}</div>
+    <div class="grid2">
+      <div class="card"><h2>Penumpukan per tahapan</h2><div class="small muted" style="margin:-6px 0 8px">Tahapan yang belum selesai. Bar terpanjang = bottleneck.</div>${stepRows}</div>
+      <div class="card"><div style="display:flex;align-items:center"><h2 class="grow">Karyawan hari ini</h2><button class="btn sm ghost" data-act="page" data-page="plot">Atur →</button></div>${todayRows || '<div class="empty">Belum ada karyawan</div>'}</div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><h2>Daftar proyek</h2>
+      ${ps.length ? `<div class="scroll-x"><table class="tbl"><thead><tr><th>Proyek</th><th>Jenis</th><th>Qty</th><th>Progress</th><th>Panel</th><th>Deadline</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty">Tidak ada proyek untuk filter ini.</div>'}
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Per client</h2>${clientRows || '<div class="empty">Tidak ada proyek client di filter ini.</div>'}</div>
+      <div class="card"><h2>Kehadiran ${fmtDate(t, {month:'long'})}</h2><table class="tbl"><thead><tr><th>Nama</th><th>Telat</th><th>Lembur</th><th>Gamasuk</th></tr></thead><tbody>${attRows}</tbody></table></div>
+    </div>`;
+};
+
+/* ---------- PROJECTS ---------- */
+PAGES.projects = () => {
+  const pm = plotMap();
+  const q = UI.pq.toLowerCase();
+  const list = S.projects.filter(p => !!p.archived === UI.showArchived && (UI.fOwner === 'all' || p.owner === UI.fOwner) && (UI.fCat === 'all' || p.cat === UI.fCat)
+    && (UI.pStatus === 'all' || (UI.pStatus === 'live') === isLive(p)) && (!q || projName(p).toLowerCase().includes(q)));
+  const grid = UI.projView === 'grid', nDraft = S.projects.filter(p => !p.archived && !isLive(p)).length;
+  const filtered = UI.fOwner !== 'all' || UI.fCat !== 'all' || UI.pStatus !== 'all' || UI.pq;
+  UI._list = list.map(p => p.id);
+  const empty = `<div class="empty">${UI.showArchived ? 'Arsip kosong.' : S.projects.length ? 'Tidak ada proyek untuk filter ini.' : 'Belum ada proyek. Klik <b>+ Proyek baru</b>.'}</div>`;
+  return `<div class="head"><div><h1>Proyek</h1><div class="sub">${grid ? 'Klik kotak proyek untuk lihat detail batch & tahapan.' : 'Klik kotak tahapan untuk menjadwalkan ke karyawan atau menandai selesai.'}</div></div><div class="grow"></div>
+      <input type="search" id="pq" data-in="pq" placeholder="Cari proyek…" value="${esc(UI.pq)}" style="width:200px">
+      <button class="btn pri" data-act="newProj">+ Proyek baru</button></div>
+    <div class="card toolbar">${projFilters(nDraft)}<div class="grow"></div>
+      <button class="btn sm ${UI.selMode ? 'on-dark' : ''}" data-act="selMode" title="Pilih beberapa proyek sekaligus">☑ Pilih</button>
+      ${(() => { const ck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'; return `<div class="vtoggle" role="group" aria-label="Tampilan proyek"><button class="${grid ? '' : 'on'}" data-act="projView" data-v="list" title="Tampilan detail" aria-pressed="${!grid}">${grid ? '' : ck}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h14"/></svg></button><button class="${grid ? 'on' : ''}" data-act="projView" data-v="grid" title="Tampilan kotak" aria-pressed="${grid}">${grid ? ck : ''}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.2"/></svg></button></div>`; })()}
+      <button class="btn sm ${UI.showArchived ? 'on-dark' : ''}" data-act="toggleArchived">${UI.showArchived ? '← Proyek aktif' : 'Arsip'}</button></div>
+    <div class="small muted" style="margin:-4px 2px 10px">${list.length} proyek${UI.showArchived ? ' di arsip' : ''}${filtered ? ` · <button class="linkbtn" data-act="resetFilters">Reset filter</button>` : ''}</div>
+    ${bulkBar(list)}
+    ${!list.length ? empty : grid ? `<div class="tiles">${list.map(p => UI.openProj === p.id ? projectCard(p, pm, true) : projectTile(p, pm)).join('')}</div>` : list.map(p => projectCard(p, pm)).join('')}
+    <div class="small muted" style="margin-top:10px">Keterangan: <span class="badge">○ belum</span> <span class="badge" style="background:var(--blue-soft);color:var(--blue)">nama · tgl = sudah diplot</span> <span class="badge" style="background:var(--green-soft);color:var(--green)">✓ selesai</span></div>`;
+};
+
+// labelled segmented filters for the Proyek tab
+function projFilters(nDraft){
+  const seg = (k, v, l) => `<button class="${UI[k] === v ? 'on' : ''}" data-act="setf" data-k="${k}" data-v="${v}">${l}</button>`;
+  const grp = (label, html) => `<div class="tgroup"><span class="tlabel">${label}</span><div class="segctl seg-sm">${html}</div></div>`;
+  return grp('Untuk', seg('fOwner', 'all', 'Semua') + seg('fOwner', 'client', 'Client') + seg('fOwner', 'internal', 'Internal'))
+    + grp('Kategori', seg('fCat', 'all', 'Semua') + seg('fCat', 'FN', 'Furniture') + seg('fCat', 'KYPT', 'KY&PT'))
+    + grp('Status', seg('pStatus', 'all', 'Semua') + seg('pStatus', 'live', 'On going') + seg('pStatus', 'draft', 'Belum mulai' + (nDraft ? `<span class="cnt">${nDraft}</span>` : '')));
+}
+const selBox = p => `<span class="selbox ${UI.sel.has(p.id) ? 'on' : ''}">${UI.sel.has(p.id) ? '✓' : ''}</span>`;
+function bulkBar(list){
+  if (!UI.selMode) return '';
+  const n = list.filter(p => UI.sel.has(p.id)).length, all = list.length && n === list.length;
+  return `<div class="bulkbar"><b>${n} dipilih</b><button class="btn sm" data-act="selAll">${all ? 'Kosongkan' : `Pilih semua (${list.length})`}</button><div class="grow"></div>
+    ${n ? `<button class="btn sm go" data-act="bulk" data-op="start">▶ Mulai produksi</button><button class="btn sm stop" data-act="bulk" data-op="stop">■ Stop produksi</button>
+      <button class="btn sm" data-act="bulk" data-op="archive">${UI.showArchived ? 'Aktifkan lagi' : 'Arsipkan'}</button><button class="btn sm" data-act="bulk" data-op="delete">Hapus</button>`
+      : '<span class="small" style="opacity:.75">Klik proyek untuk memilih</span>'}
+    <button class="btn sm" data-act="selMode">Selesai</button></div>`;
+}
+function removeProject(id){
+  S.projects = S.projects.filter(x => x.id !== id);
+  S.plots = S.plots.filter(x => !(x.type === 'task' && x.key.startsWith(id + '|')));
+  S.panels = S.panels.filter(x => x.pid !== id);
+  Object.keys(S.doneManual).forEach(k => k.startsWith(id + '|') && delete S.doneManual[k]);
+}
+
+function projectTile(p, pm){
+  const st = projStats(p, pm), ps = pcsStats(p), sf = shortfall(p, pm), live = isLive(p);
+  return `<div class="tile ${live ? '' : 'draft'} ${UI.sel.has(p.id) ? 'sel' : ''}" data-act="openTile" data-id="${p.id}">
+    <div class="meta" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">${UI.selMode ? selBox(p) : ''}<span class="badge b-${p.owner}">${OWNER_LABEL[p.owner]}</span><span class="badge b-${p.cat}">${CAT_SHORT[p.cat]}</span>${statusBadge(p)}</div>
+    <div class="name">${esc(projName(p))}</div>
+    <div class="small muted">${p.qty} pcs · ${batchCount(p)} · ${panelTotal(p)} papan${p.pattern ? '<br>' + esc(p.pattern) : ''}${p.size ? ' · ' + esc(p.size) : ''}</div>
+    <div class="prog"><span class="pl">Tahapan</span>${progBar(st.done, st.planned, st.total)}<span class="pv">${st.pct}%</span></div>
+    <div class="prog"><span class="pl">Pcs jadi</span>${pcsBar(ps.good, ps.target)}<span class="pv">${ps.good}/${ps.target}</span></div>
+    <div class="tile-foot">${deadlineBadge(p, st)}${sf ? `<span class="badge b-late">Kurang ${sf} pcs</span>` : ''}<div class="grow"></div>
+      ${live ? '' : `<button class="btn sm go" data-act="startProj" data-id="${p.id}">▶ Mulai produksi</button>`}</div></div>`;
+}
+
+function projectCard(p, pm, open){
+  const st = projStats(p, pm), steps = orderSteps(p), closed = !open && UI.collapsed[p.id];
+  const ps = pcsStats(p), sf = shortfall(p, pm);
+  const numCtl = k => `<div class="panelctl"><button class="icon-btn" data-act="pAdj" data-pid="${p.id}" data-k="${k}" data-d="-1">−</button><input type="number" min="0" class="numin" value="${ps[k]}" data-ch="pNum" data-pid="${p.id}" data-k="${k}"><button class="icon-btn" data-act="pAdj" data-pid="${p.id}" data-k="${k}" data-d="1">+</button></div>`;
+  const t = today();
+  const head = `<div class="proj-h" data-act="toggleProj" data-id="${p.id}">${UI.selMode ? selBox(p) : ''}
+    <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+    <div class="grow" style="min-width:180px"><div class="name">${esc(projName(p))}</div>
+      <div class="meta"><span class="badge b-${p.owner}">${OWNER_LABEL[p.owner]}</span><span class="badge b-${p.cat}">${CAT_LABEL[p.cat]}</span>${statusBadge(p)}
+      <span class="small muted">${p.qty} pcs · ${batchCount(p)} · ${panelTotal(p)} papan${p.pattern ? ' · ' + esc(p.pattern) : ''}${p.size ? ' · ' + esc(p.size) : ''}</span>${deadlineBadge(p, st)}${sf ? `<span class="badge b-late">Kurang ${sf} pcs</span>` : ''}</div></div>
+    <div class="progs"><div class="prog"><span class="pl">Tahapan</span>${progBar(st.done, st.planned, st.total)}<span class="pv">${st.pct}%</span></div>
+      <div class="prog"><span class="pl">Pcs jadi</span>${pcsBar(ps.good, ps.target)}<span class="pv">${ps.good}/${ps.target}</span></div></div></div>`;
+  if (closed) return `<div class="card proj${UI.sel.has(p.id) ? ' sel' : ''} closed">${head}</div>`;
+  const rows = p.batches.map((b, bi) => {
+    const cells = steps.map(step => {
+      const key = p.id + '|' + b.id + '|' + step, s = taskStatus(key, pm), pl = pm[key];
+      let cls = s, txt = '○';
+      if (s === 'done') txt = '✓';
+      else if (s === 'planned') { const e = emp(pl.emp); txt = esc(e ? e.name : '?') + '<br><span style="font-weight:500">' + (pl.date === t ? 'hari ini' : fmtDate(pl.date)) + '</span>'; if (pl.date < t) cls += ' late'; }
+      return `<td><button class="cell ${cls}" data-act="cell" data-key="${esc(key)}" title="${esc(step)}">${txt}</button></td>`;
+    }).join('');
+    const d = panelDone(b), pp = panelPlanned(b), need = needOf(p, b);
+    return `<tr class="${isLive(p) && !batchOn(p, b) ? 'b-off' : ''}"><td class="l"><div class="bl"><b>${batchLabel(p, bi)}</b>${isLive(p) && p.owner === 'internal' ? (batchOn(p, b)
+      ? `<button class="bchip on" data-act="batchStop" data-pid="${p.id}" data-bid="${b.id}" title="Stop batch ini: keluar dari Plotting & Panel">● Jalan</button>`
+      : `<button class="bchip" data-act="batchStart" data-pid="${p.id}" data-bid="${b.id}" title="Masukkan batch ini ke Plotting & Panel">▶ Mulai</button>`) : ''}</div><div class="small muted">${needOf(p, b)} papan${b.pattern || p.pattern ? ' · ' + esc(b.pattern || p.pattern) : ''}</div>${b.product ? `<div class="small" style="font-weight:600">${esc(b.product)}</div>` : ''}</td>
+      <td class="pcol">${need ? `<div class="panelctl"><button class="icon-btn" data-act="panelAdj" data-pid="${p.id}" data-bid="${b.id}" data-d="-1">−</button><b style="color:${d >= need ? 'var(--green)' : 'inherit'}">${d}/${need}</b><button class="icon-btn" data-act="panelAdj" data-pid="${p.id}" data-bid="${b.id}" data-d="1">+</button></div>${pp ? `<div class="small muted" style="text-align:center">${pp} diplot</div>` : ''}` : '<span class="muted small">–</span>'}</td>${cells}</tr>`;
+  }).join('');
+  return `<div class="card proj${UI.sel.has(p.id) ? ' sel' : ''}">${head}<div class="proj-b">
+    ${isLive(p) ? '' : `<div class="banner" style="margin:0 0 10px;background:#f3f2ee;border-color:#d5d2c8;color:#4d504a">Belum mulai produksi: tahapan & kebutuhan papan proyek ini belum masuk Plotting dan Panel.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${p.id}">▶ Mulai produksi</button></div>`}
+    <div class="scroll-x"><table class="matrix"><thead><tr><th class="l"></th><th class="pcol">Panel</th>${steps.map(s => `<th><span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${stepColor(s)};margin-right:4px"></span>${esc(s)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="pcsrow"><span class="pcs-l">Pcs jadi</span>${numCtl('good')}<span class="small muted">dari target ${ps.target} pcs</span></div>
+    ${p.cat === 'FN' && (p.woodNeeded || p.woodStock) ? `<div class="small" style="margin-top:6px">Kayu: butuh <b>${p.woodNeeded}</b> · stok <b>${p.woodStock}</b> ${p.woodStock < p.woodNeeded ? '<span class="badge b-late">kurang ' + (p.woodNeeded - p.woodStock) + '</span>' : ''}</div>` : ''}
+    ${p.notes ? `<div class="small muted" style="margin-top:6px">📝 ${esc(p.notes)}</div>` : ''}
+    ${sf ? `<div class="banner" style="margin:10px 0 0">Semua batch sudah selesai, tapi pcs jadi masih kurang <b>${sf} pcs</b> dari target ${ps.target}.</div>` : ''}
+    <div class="proj-foot">${isLive(p) && p.batches.some(b => !batchOn(p, b)) ? `<button class="btn sm go" data-act="batchStartAll" data-pid="${p.id}">▶ Mulai semua batch (${p.batches.filter(b => !batchOn(p, b)).length})</button>` : ''}<button class="btn sm pri" data-act="addBatch" data-id="${p.id}">+ Tambah batch${sf ? ` (kurang ${sf} pcs)` : ''}</button><button class="btn sm" data-act="editProj" data-id="${p.id}">Edit</button>
+      <button class="btn sm" data-act="archiveProj" data-id="${p.id}">${p.archived ? 'Aktifkan lagi' : 'Arsipkan'}</button>
+      ${isLive(p) ? `<button class="btn sm stop" data-act="pauseProj" data-id="${p.id}" title="Keluarkan dari antrian Plotting & Panel">■ Stop produksi</button>` : ''}
+      <button class="btn sm ghost danger" data-act="delProj" data-id="${p.id}">Hapus</button></div>
+  </div></div>`;
+}
+
+/* ---------- PLOTTING ---------- */
+function plotTitle(x){
+  if (x.type === 'custom') return x.text;
+  const t = taskByKey(x.key); return t ? t.step + ' - ' + projName(t.p) : '(proyek dihapus)';
+}
+PAGES.plot = () => {
+  const week = UI.plotView === 'week';
+  const pm = plotMap(), d = UI.date, q = UI.q.toLowerCase();
+  const queue = tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && batchOn(t.p, t.b) && (UI.qCat === 'all' || t.p.cat === UI.qCat) && (UI.qOwner === 'all' || t.p.owner === UI.qOwner) && (!q || (t.step + ' ' + projName(t.p)).toLowerCase().includes(q)));
+  const groups = {}; queue.forEach(t => (groups[t.p.id] = groups[t.p.id] || []).push(t));
+  // within each project, tasks that are ready to work on come first
+  Object.values(groups).forEach(list => list.forEach(t => t.wait = waitingFor(t, pm)));
+  Object.values(groups).forEach(list => list.sort((a, b) => !!a.wait - !!b.wait));
+  // one collapsible group per project; open groups list their batches with each step as a draggable chip
+  const qGroups = Object.values(groups);
+  UI._qg = qGroups.map(list => list[0].p.id);
+  const qOpen = id => !!q || UI.queueOpen.has(id), qAllOpen = qGroups.length && qGroups.every(list => qOpen(list[0].p.id));
+  const qhtml = qGroups.map(list => {
+    const p = list[0].p, open = qOpen(p.id), steps = orderSteps(p), byStep = {}, batches = [];
+    list.forEach(t => { byStep[t.step] = (byStep[t.step] || 0) + 1; let g = batches.find(x => x.b === t.b); if (!g) batches.push(g = {b: t.b, bi: t.bi, items: []}); g.items.push(t); });
+    batches.sort((a, b) => a.bi - b.bi); batches.forEach(g => g.items.sort((a, b) => steps.indexOf(a.step) - steps.indexOf(b.step)));
+    return `<div class="pgroup qg ${open ? 'open' : ''}" style="border-left-color:${p.cat === 'FN' ? 'var(--brand)' : '#9b3a77'}">
+      <button class="pg-h" data-act="queueGroup" data-id="${p.id}"><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
+        <span class="grow"><b>${esc(projName(p))}</b><span class="s"><span class="badge b-${p.cat}" style="font-size:10px;padding:1px 6px">${CAT_SHORT[p.cat]}</span> ${batches.length} batch ${deadlineBadge(p)}</span></span><span class="badge">${list.length} tugas</span></button>
+      ${open ? batches.map(g => `<div class="pg-batch"><div class="pg-bh"><b>${batchLabel(p, g.bi)}</b> <span class="s">· ${esc(papanLabel(p, g.b))}${g.b.product ? ' · ' + esc(g.b.product) : ''}</span></div>
+          <div class="papans">${g.items.map(t => `<div class="stask ${t.wait ? 'wait' : ''}" draggable="true" data-drag="task" data-key="${esc(t.key)}" data-act="pickTask" style="--c:${stepColor(t.step)}" title="${esc(t.step)}: ${t.wait ? 'tunggu ' + esc(t.wait) + ' selesai dulu' : 'siap dikerjakan'}. Tarik ke karyawan atau klik.">${t.wait ? '⏳ ' : ''}${esc(t.step)}</div>`).join('')}</div></div>`).join('')
+        : `<div class="pg-sum">${steps.filter(s => byStep[s]).map(s => `<span class="pchip" style="box-shadow:inset 3px 0 0 ${stepColor(s)}">${esc(s)} <b>${byStep[s]}</b></span>`).join('')}</div>`}
+    </div>`;
+  }).join('');
+  const overdue = S.plots.filter(x => x.date < d && !x.done && x.date >= addDays(d, -30) && (x.type === 'custom' || taskByKey(x.key)));
+  const emps = activeEmps();
+  const att = S.attendance[d] || {};
+  const cols = emps.map(e => {
+    const pl = S.plots.filter(x => x.date === d && x.emp === e.id);
+    const a = att[e.id] || 'Masuk';
+    const cards = pl.map(x => {
+      let main = '', sub = '', c = '#6b7280';
+      if (x.type === 'custom') { main = esc(x.text); sub = 'Tugas lain'; }
+      else { const t = taskByKey(x.key); if (!t) return ''; c = stepColor(t.step); main = esc(t.step); sub = esc(prodName(t.p, t.b)) + ' · ' + batchLabel(t.p, t.bi) + ' · ' + esc(papanLabel(t.p, t.b)); }
+      return `<div class="pcard ${x.done ? 'done' : ''}" draggable="true" data-drag="plot" data-id="${x.id}" style="--c:${c}">
+        <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="plotDone" data-id="${x.id}" title="Tandai selesai">
+        <div class="tx"><b>${main}</b><div class="s">${sub}</div></div>
+        <button class="icon-btn no-print" data-act="unplot" data-id="${x.id}" title="Kembalikan ke antrian">✕</button></div>`;
+    }).join('');
+    const dn = pl.filter(x => x.done).length;
+    return `<div class="col ${a === 'Gamasuk' ? 'absent' : ''}" data-drop="emp" data-emp="${e.id}">
+      <div class="col-h"><div class="av" style="background:${e.color};width:26px;height:26px;font-size:11px">${initials(e.name)}</div><div><div class="n">${esc(e.name)}</div><div class="colcount">${dn}/${pl.length} selesai</div></div>
+        <select data-ch="att" data-emp="${e.id}" class="no-print">${ATT.map(o => `<option ${o === a ? 'selected' : ''}>${o}</option>`).join('')}</select></div>
+      ${cards || `<div class="small muted" style="text-align:center;padding:18px 6px">Tarik tugas ke sini<br>atau klik tugas di antrian</div>`}
+      <div class="addline"><input type="text" list="qt" placeholder="+ Tugas lain (Enter)" data-addcustom="${e.id}"></div></div>`;
+  }).join('');
+  return `<div class="head"><div><h1>Plotting</h1><div class="sub">${week ? 'Tarik tugas ke hari & orangnya. Klik nama hari untuk lihat detail harian.' : 'Tarik tugas dari antrian ke karyawan. Centang kalau sudah selesai.'}</div></div><div class="grow"></div>
+      <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="plotView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="plotView" data-v="day">Harian</button></div>
+      <div class="datenav"><button class="btn sm" data-act="dateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="dateShift" data-n="1">›</button>
+      ${d !== today() ? `<button class="btn sm" data-act="dateToday">Hari ini</button>` : ''}<input type="date" value="${d}" data-ch="date"></div>
+      <button class="btn sm no-print" data-act="print">🖨 Cetak</button></div>
+    ${overdue.length ? `<div class="banner">⚠️ <b>${overdue.length} tugas</b> dari hari sebelumnya belum dicentang selesai.<div class="grow"></div><button class="btn sm" data-act="carry">Pindahkan ke ${fmtDate(d)}</button></div>` : ''}
+    <datalist id="qt">${S.quickTasks.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
+    <div class="plot">
+      <section class="card queue" data-drop="queue">
+        <div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Antrian tugas</h2><span class="badge">${queue.length} tugas</span></div>
+          ${qGroups.length ? `<div class="small muted" style="display:flex;gap:6px">${qGroups.length} proyek<div class="grow"></div>${q ? '' : `<button class="linkbtn" data-act="queueAll">${qAllOpen ? 'Tutup semua' : 'Buka semua'}</button>`}</div>` : ''}
+          <input type="search" id="q" data-in="q" placeholder="Cari tahapan / proyek…" value="${esc(UI.q)}">
+          <div class="qfilters">${qseg('Untuk', 'qOwner', [['all', 'Semua'], ['client', 'Client'], ['internal', 'Internal']])}${qseg('Kategori', 'qCat', [['all', 'Semua'], ['FN', 'FN'], ['KYPT', 'KY&PT']])}</div></div>
+        <div class="list">${qhtml || '<div class="empty" style="margin-top:8px">Antrian kosong 👍</div>'}</div>
+      </section>
+      ${week ? weekBoard(emps) : `<section class="board" style="grid-template-columns:repeat(${Math.max(1, emps.length)},minmax(220px,1fr))">${cols || '<div class="empty">Tambah karyawan di Pengaturan.</div>'}</section>`}
+    </div>`;
+};
+
+const qseg = (label, k, opts) => `<div class="qrow"><span class="tlabel">${label}</span><div class="segctl qseg">${opts.map(([v, l]) => `<button class="${UI[k] === v ? 'on' : ''}" data-act="setf" data-k="${k}" data-v="${v}">${l}</button>`).join('')}</div></div>`;
+
+// rows = the 7 days starting at UI.date, columns = employees
+function weekBoard(emps){
+  if (!emps.length) return '<div class="empty">Tambah karyawan di Pengaturan.</div>';
+  const t = today(), days = Array.from({length: 7}, (_, i) => addDays(UI.date, i));
+  const head = '<div></div>' + emps.map(e => {
+    const n = S.plots.filter(x => x.emp === e.id && days.includes(x.date));
+    return `<div class="wk-h"><div class="av" style="background:${e.color};width:26px;height:26px;font-size:11px">${initials(e.name)}</div><div><b>${esc(e.name)}</b><div class="colcount">${n.filter(x => x.done).length}/${n.length} selesai</div></div></div>`;
+  }).join('');
+  const rows = days.map(d => {
+    const off = new Date(d + 'T00:00').getDay() === 0;
+    const label = `<button class="wk-day ${d === t ? 'today' : ''} ${off ? 'off' : ''}" data-act="openDay" data-d="${d}" title="Lihat detail harian"><b>${fmtDate(d, {weekday:'long'})}</b><span>${fmtDate(d)}</span>${d === t ? '<em>Hari ini</em>' : ''}</button>`;
+    const cells = emps.map(e => {
+      const pl = S.plots.filter(x => x.date === d && x.emp === e.id), a = (S.attendance[d] || {})[e.id];
+      return `<div class="wk-cell ${a === 'Gamasuk' ? 'absent' : ''}" data-drop="emp" data-emp="${e.id}" data-date="${d}">
+        ${a && a !== 'Masuk' ? `<span class="badge ${a === 'Gamasuk' ? 'b-late' : a === 'Telat' ? 'b-soon' : ''}" style="align-self:flex-start">${a}</span>` : ''}
+        ${pl.map(miniCard).join('')}
+        <button class="wk-add no-print" data-act="addCustomCell" data-emp="${e.id}" data-d="${d}" title="Tambah tugas lain">+ tugas lain</button></div>`;
+    }).join('');
+    return label + cells;
+  }).join('');
+  return `<section class="week" style="grid-template-columns:96px repeat(${emps.length},minmax(150px,1fr))">${head}${rows}</section>`;
+}
+function miniCard(x){
+  let main, sub = '', c = '#6b7280';
+  if (x.type === 'custom') main = esc(x.text);
+  else { const t = taskByKey(x.key); if (!t) return ''; c = stepColor(t.step); main = esc(t.step); sub = esc(prodName(t.p, t.b)) + ' · B' + (t.bi + 1) + ' · ' + esc(papanLabel(t.p, t.b)); }
+  return `<div class="mcard ${x.done ? 'done' : ''}" draggable="true" data-drag="plot" data-id="${x.id}" style="--c:${c}" title="${main}${sub ? ' — ' + sub : ''}">
+    <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="plotDone" data-id="${x.id}"><div class="tx"><b>${main}</b>${sub ? `<div class="s">${sub}</div>` : ''}</div>
+    <button class="icon-btn no-print" data-act="unplot" data-id="${x.id}" title="Kembalikan ke antrian">✕</button></div>`;
+}
+
+/* ---------- PANEL ---------- */
+PAGES.panel = () => {
+  const d = UI.panelDate, week = UI.panelView === 'week';
+  const needs = [];
+  liveProjects().forEach(p => p.batches.forEach((b, bi) => {
+    if (!batchOn(p, b)) return;
+    const rem = (needOf(p, b)) - panelDone(b) - panelPlanned(b);
+    if (rem > 0) needs.push({p, b, bi, rem});
+  }));
+  // one collapsible group per project; the colour summary stays visible while it is closed
+  const groups = [];
+  needs.forEach(n => { let g = groups.find(x => x.p === n.p); if (!g) groups.push(g = {p: n.p, items: []}); g.items.push(n); });
+  UI._pg = groups.map(g => g.p.id);
+  const allOpen = groups.length && groups.every(g => UI.panelOpen.has(g.p.id));
+  const qhtml = groups.map(({p, items}) => {
+    const open = UI.panelOpen.has(p.id), tot = items.reduce((a, n) => a + n.rem, 0), byColor = {};
+    items.forEach(n => { const c = n.b.pattern || p.pattern || '?'; byColor[c] = (byColor[c] || 0) + n.rem; });
+    return `<div class="pgroup ${open ? 'open' : ''}">
+      <button class="pg-h" data-act="panelGroup" data-id="${p.id}"><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
+        <span class="grow"><b>${esc(projName(p))}</b><span class="s">${esc(p.size || '')} · ${items.length} batch</span></span><span class="badge" style="background:var(--amber-soft);color:var(--amber)">${tot} papan</span></button>
+      ${open ? items.map(n => `<div class="pg-batch"><div class="pg-bh"><b>${esc(n.b.pattern || p.pattern || 'Pattern?')}</b> <span class="s">· ${batchLabel(p, n.bi)}${n.b.product ? ' · ' + esc(n.b.product) : ''} · sisa <b style="color:var(--ink)">${n.rem}</b> papan</span></div>
+          <div class="papans">${freePapanNos(p, n.b, n.rem).map(no => `<div class="papan" draggable="true" data-drag="need" data-pid="${p.id}" data-bid="${n.b.id}" data-qty="1" data-no="${no}" data-act="pickNeed" title="Papan #${no} ${esc(n.b.pattern || p.pattern || '')}: tarik ke mesin atau klik">#${no}</div>`).join('')}</div></div>`).join('')
+        : `<div class="pg-sum">${Object.entries(byColor).map(([c, q]) => `<span class="pchip">${esc(c)} <b>${q}</b></span>`).join('')}</div>`}
+    </div>`;
+  }).join('');
+  const cols = S.machines.map(m => {
+    const list = S.panels.filter(x => x.date === d && x.machine === m.id);
+    const cards = list.map(x => { const p = S.projects.find(y => y.id === x.pid); return `<div class="pcard ${x.done ? 'done' : ''}" style="--c:var(--amber)" draggable="true" data-drag="panel" data-id="${x.id}">
+      <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="panelDone" data-id="${x.id}">
+      <div class="tx"><b>${esc(x.pattern)}${x.no ? ' #' + x.no : ''} · ${esc(x.size)}</b><div class="s">${p ? esc(projName(p)) : 'Stok'} · <input type="number" min="1" class="qtyin" value="${x.qty}" data-ch="panelQty" data-id="${x.id}"> pcs</div></div>
+      <button class="icon-btn" data-act="delPanel" data-id="${x.id}">✕</button></div>`; }).join('');
+    const tot = list.reduce((a, x) => a + (+x.qty || 0), 0);
+    return `<div class="col" data-drop="machine" data-m="${m.id}"><div class="col-h"><div><div class="n">${esc(m.name)}</div><div class="colcount">${tot} panel</div></div></div>
+      ${cards || '<div class="small muted" style="text-align:center;padding:18px 6px">Tarik kebutuhan panel ke sini</div>'}
+      <div class="addline"><button class="btn sm" style="width:100%" data-act="addStock" data-m="${m.id}">+ Panel stok / manual</button></div></div>`;
+  }).join('');
+  return `<div class="head"><div><h1>Production Panel</h1><div class="sub">Jadwal cetak panel per mesin. Panel yang dicentang otomatis menambah "Panel Done" di proyek.</div></div><div class="grow"></div>
+      <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="panelView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="panelView" data-v="day">Harian</button></div>
+      <div class="datenav"><button class="btn sm" data-act="pdateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="pdateShift" data-n="1">›</button>
+      ${d !== today() ? '<button class="btn sm" data-act="pdateToday">Hari ini</button>' : ''}<input type="date" value="${d}" data-ch="pdate"></div></div>
+    <div class="plot">
+      <section class="card queue" data-drop="pqueue"><div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Kebutuhan panel</h2><span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span></div>
+        ${groups.length ? `<div class="small muted" style="display:flex;gap:6px">${groups.length} proyek<div class="grow"></div><button class="linkbtn" data-act="panelAll">${allOpen ? 'Tutup semua' : 'Buka semua'}</button></div>` : ''}</div>
+        <div class="list">${qhtml || '<div class="empty">Semua kebutuhan panel sudah terjadwal 👍</div>'}</div></section>
+      ${week ? panelWeek() : `<section class="board" style="grid-template-columns:repeat(${S.machines.length},minmax(220px,1fr))">${cols}</section>`}
+    </div>`;
+};
+
+// rows = the 7 days starting at UI.panelDate, columns = machines
+function panelWeek(){
+  if (!S.machines.length) return '<div class="empty">Tambah mesin di Pengaturan.</div>';
+  const t = today(), days = Array.from({length: 7}, (_, i) => addDays(UI.panelDate, i));
+  const head = '<div></div>' + S.machines.map(m => {
+    const n = S.panels.filter(x => x.machine === m.id && days.includes(x.date)).reduce((a, x) => a + (+x.qty || 0), 0);
+    return `<div class="wk-h"><div><b>${esc(m.name)}</b><div class="colcount">${n} panel minggu ini</div></div></div>`;
+  }).join('');
+  const rows = days.map(d => {
+    const off = new Date(d + 'T00:00').getDay() === 0;
+    const label = `<button class="wk-day ${d === t ? 'today' : ''} ${off ? 'off' : ''}" data-act="openPanelDay" data-d="${d}" title="Lihat detail harian"><b>${fmtDate(d, {weekday:'long'})}</b><span>${fmtDate(d)}</span>${d === t ? '<em>Hari ini</em>' : ''}</button>`;
+    const cells = S.machines.map(m => `<div class="wk-cell" data-drop="machine" data-m="${m.id}" data-date="${d}">
+        ${S.panels.filter(x => x.date === d && x.machine === m.id).map(panelMini).join('')}
+        <button class="wk-add no-print" data-act="addStock" data-m="${m.id}" data-d="${d}" title="Tambah panel stok / manual">+ panel stok</button></div>`).join('');
+    return label + cells;
+  }).join('');
+  return `<section class="week" style="grid-template-columns:96px repeat(${S.machines.length},minmax(150px,1fr))">${head}${rows}</section>`;
+}
+function panelMini(x){
+  const p = S.projects.find(y => y.id === x.pid), src = p ? projName(p) : 'Stok';
+  return `<div class="mcard ${x.done ? 'done' : ''}" draggable="true" data-drag="panel" data-id="${x.id}" style="--c:var(--amber)" title="${esc((x.no ? 'Papan #' + x.no + ' ' : x.qty + ' × ') + x.pattern + ' · ' + x.size + ' — ' + src)}">
+    <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="panelDone" data-id="${x.id}"><div class="tx"><b>${x.no ? esc(x.pattern) + ' #' + x.no : x.qty + ' × ' + esc(x.pattern)}</b><div class="s">${esc(x.size)} · ${esc(src)}</div></div>
+    <button class="icon-btn no-print" data-act="delPanel" data-id="${x.id}" title="Hapus dari jadwal">✕</button></div>`;
+}
+
+/* ---------- HARI INI (share card) ---------- */
+PAGES.today = () => {
+  const d = UI.shareDate, emps = activeEmps(), att = S.attendance[d] || {}, show = x => UI.shareDone || !x.done;
+  let nTask = 0, nPanel = 0;
+  const empCols = emps.map(e => {
+    const pl = S.plots.filter(x => x.date === d && x.emp === e.id && show(x)), a = att[e.id] || 'Masuk';
+    const items = pl.map(x => {
+      if (x.type === 'custom') return `<li class="${x.done ? 'done' : ''}"><b>${esc(x.text)}</b></li>`;
+      const t = taskByKey(x.key); if (!t) return '';
+      return `<li class="${x.done ? 'done' : ''}" style="--c:${stepColor(t.step)}"><b>${esc(t.step)}</b><span>${esc(prodName(t.p, t.b))} · ${batchLabel(t.p, t.bi)} · ${esc(papanLabel(t.p, t.b))}</span></li>`;
+    }).filter(Boolean);
+    nTask += items.length;
+    return `<div class="sh-col ${a === 'Gamasuk' ? 'absent' : ''}"><div class="sh-eh"><div class="av" style="background:${e.color}">${initials(e.name)}</div><b>${esc(e.name)}</b>
+      ${a !== 'Masuk' ? `<span class="badge ${a === 'Gamasuk' ? 'b-late' : a === 'Telat' ? 'b-soon' : ''}">${a}</span>` : ''}<span class="sh-n">${items.length} tugas</span></div>
+      <ol>${items.join('') || '<li class="none">Belum ada tugas</li>'}</ol></div>`;
+  }).join('');
+  const machCols = S.machines.map(m => {
+    const list = S.panels.filter(x => x.date === d && x.machine === m.id && show(x)), tot = list.reduce((a, x) => a + (+x.qty || 0), 0);
+    nPanel += tot;
+    const items = list.map(x => {
+      const p = S.projects.find(y => y.id === x.pid), b = p && p.batches.find(y => y.id === x.batchId);
+      return `<li class="${x.done ? 'done' : ''}" style="--c:var(--amber)"><b>${x.no ? esc(x.pattern) + ' #' + x.no : x.qty + ' × ' + esc(x.pattern)}</b><span>${esc(x.size)} · ${p ? esc(prodName(p, b)) : 'Stok'}</span></li>`;
+    }).join('');
+    return `<div class="sh-col"><div class="sh-eh"><b>${esc(m.name)}</b><span class="sh-n">${tot} papan</span></div><ol>${items || '<li class="none">Tidak ada jadwal</li>'}</ol></div>`;
+  }).join('');
+  const now = new Date();
+  return `<div class="head"><div><h1>Hari Ini</h1><div class="sub">Ringkasan tugas & panel untuk dibagikan ke grup karyawan. Screenshot kartu putih di bawah.</div></div><div class="grow"></div>
+      <label class="small" style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" ${UI.shareDone ? 'checked' : ''} data-ch="shareDone" style="accent-color:var(--brand)">Tampilkan yang sudah selesai</label>
+      <div class="datenav"><button class="btn sm" data-act="shareShift" data-n="-1">‹</button><div class="d">${fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="shareShift" data-n="1">›</button>
+      ${d !== today() ? '<button class="btn sm" data-act="shareToday">Hari ini</button>' : ''}</div></div>
+    <div class="share-card">
+      <div class="sh-top"><div class="logo-mark"></div><div><div class="sh-brand">DIT REVEILLE · PRODUKSI</div><h2>${fmtLong(d)}</h2></div><div class="grow"></div>
+        <div class="sh-sum"><b>${nTask}</b> tugas · <b>${nPanel}</b> papan</div></div>
+      <div class="sh-sec">Produksi Umum</div><div class="sh-grid">${empCols || '<div class="empty">Belum ada karyawan aktif.</div>'}</div>
+      <div class="sh-sec">Cetak panel</div><div class="sh-grid">${machCols}</div>
+      <div class="sh-foot">Diperbarui ${now.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} ${now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
+    </div>`;
+};
+
+/* ---------- SETTINGS ---------- */
+PAGES.settings = () => {
+  const stepList = cat => S.steps[cat].map((s, i) => `<div class="srow"><span style="width:10px;height:10px;border-radius:3px;background:${stepColor(s)};flex:none"></span><span class="grow">${esc(s)}</span>
+    <button class="icon-btn" data-act="stepMove" data-cat="${cat}" data-i="${i}" data-d="-1">↑</button><button class="icon-btn" data-act="stepMove" data-cat="${cat}" data-i="${i}" data-d="1">↓</button><button class="icon-btn" data-act="stepDel" data-cat="${cat}" data-i="${i}">✕</button></div>`).join('')
+    + `<div class="srow"><input type="text" placeholder="Tahapan baru (Enter)" data-addstep="${cat}"></div>`;
+  return `<div class="head"><h1>Pengaturan</h1></div>
+  <div class="help" style="margin-bottom:14px"><b>Cara pakai singkat</b><ol>
+    <li><b>Proyek</b> → tambah pesanan client / produksi internal, pilih FN atau KY&PT, tentukan batch & tahapan.</li>
+    <li><b>Plotting Harian</b> → tarik tugas dari antrian ke kolom karyawan (atau klik tugas lalu pilih orangnya). Centang kalau selesai.</li>
+    <li><b>Panel</b> → jadwalkan cetak panel per mesin. Centang = panel jadi.</li>
+    <li><b>Dashboard</b> → lihat progress semua, per client/internal, per FN/KY&PT.</li></ol></div>
+  <div class="sgrid">
+    <div class="card"><h2>Karyawan</h2>
+      ${S.employees.map(e => `<div class="srow" style="${e.active ? '' : 'opacity:.5'}"><input type="color" value="${e.color}" data-ch="empColor" data-id="${e.id}"><input type="text" value="${esc(e.name)}" data-ch="empName" data-id="${e.id}">
+        <button class="btn sm" data-act="empToggle" data-id="${e.id}">${e.active ? 'Nonaktifkan' : 'Aktifkan'}</button></div>`).join('')}
+      <div class="srow"><input type="text" id="newEmp" placeholder="Nama karyawan baru"><button class="btn sm pri" data-act="addEmp">Tambah</button></div>
+      <div class="small muted">Karyawan nonaktif tidak muncul di plotting, tapi riwayatnya tetap tersimpan.</div></div>
+    <div class="card"><h2>Mesin panel</h2>
+      ${S.machines.map(m => `<div class="srow"><input type="text" value="${esc(m.name)}" data-ch="mName" data-id="${m.id}"><button class="icon-btn" data-act="delMachine" data-id="${m.id}">✕</button></div>`).join('')}
+      <div class="srow"><input type="text" id="newM" placeholder="Nama mesin / area"><button class="btn sm pri" data-act="addMachine">Tambah</button></div>
+      <h2 style="margin-top:16px">Tugas lain (pilihan cepat)</h2>
+      <div class="taglist">${S.quickTasks.map((x, i) => `<span class="tag">${esc(x)}<button class="icon-btn" data-act="delQuick" data-i="${i}">✕</button></span>`).join('')}</div>
+      <input type="text" placeholder="Tambah, mis. Cacah, Pilah & Cuci (Enter)" data-addquick="1"></div>
+    <div class="card"><h2>Tahapan Furniture (FN)</h2>${stepList('FN')}</div>
+    <div class="card"><h2>Tahapan Keychain & Petite (KY&PT)</h2>${stepList('KYPT')}</div>
+    <div class="card"><h2>Backup data</h2>
+      <p class="small muted" style="margin-top:0">Data disimpan di browser perangkat ini. Download backup secara rutin (mis. tiap Jumat), dan pakai "Restore" untuk memindahkan data ke laptop/HP lain.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-act="exportJson">⬇ Download backup</button>
+        <label class="btn">⬆ Restore dari file<input type="file" accept=".json" data-ch="importJson" hidden></label>
+        <button class="btn" data-act="exportCsv">⬇ Riwayat plotting (CSV)</button></div></div>
+    <div class="card"><h2>Reset</h2><p class="small muted" style="margin-top:0">Data contoh diambil dari file Excel kamu (CIMB, ERM, Urbaine, Charm LOCEAN, dll).</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-act="loadSample">Muat data contoh</button><button class="btn danger" data-act="wipe">Kosongkan semua data</button></div></div>
+  </div>`;
+};
+
+/* ============ MODALS ============ */
+function modal(title, body, foot = '', wide = false){
+  const root = document.getElementById('modal-root'), open = root.querySelector('.modal');
+  const inner = `<div class="modal-h"><h3>${title}</h3><button class="icon-btn" data-act="closeModal" style="font-size:18px">✕</button></div>
+    <div class="modal-b">${body}</div>${foot ? `<div class="modal-f">${foot}</div>` : ''}`;
+  if (!open) { root.innerHTML = `<div class="overlay" data-act="closeOverlay"><div class="modal ${wide ? 'wide' : ''}">${inner}</div></div>`; return; }
+  // already open (e.g. the project form re-rendering): swap the content in place so there is no fade-in flash,
+  // and keep the scroll position and the field the person just moved to
+  const same = open.querySelector('.modal-h h3')?.innerHTML === title, scroll = open.scrollTop, a = document.activeElement;
+  const sel = a && open.contains(a) ? [...a.attributes].filter(x => x.name.startsWith('data-')).map(x => `[${x.name}="${CSS.escape(x.value)}"]`).join('') : '';
+  open.className = 'modal' + (wide ? ' wide' : '');
+  open.innerHTML = inner;
+  if (same && sel) open.querySelector(sel)?.focus({preventScroll: true});
+  open.scrollTop = same ? scroll : 0;
+}
+const closeModal = () => document.getElementById('modal-root').innerHTML = '';
+const empPicker = (act, extra = '') => `<div class="emp-pick">${activeEmps().map(e => `<button data-act="${act}" data-emp="${e.id}" ${extra}><span class="av" style="background:${e.color}">${initials(e.name)}</span>${esc(e.name)}</button>`).join('')}</div>`;
+
+function openTaskModal(key){
+  const t = taskByKey(key); if (!t) return;
+  const pm = plotMap(), s = taskStatus(key, pm), pl = pm[key], w = waitingFor(t, pm);
+  const info = `<div class="small muted">${esc(prodName(t.p, t.b))} ·${batchLabel(t.p, t.bi)} · ${needOf(t.p, t.b)} papan${t.b.pattern || t.p.pattern ? ' · ' + esc(t.b.pattern || t.p.pattern) : ''}</div>
+    ${s === 'planned' ? `<div class="banner" style="background:var(--blue-soft);border-color:#c5d5f6;color:var(--blue);margin:10px 0 0">Sudah diplot ke <b>${esc(emp(pl.emp)?.name || '?')}</b> · ${fmtLong(pl.date)}</div>` : ''}
+    ${s === 'done' ? `<div class="banner" style="background:var(--green-soft);border-color:#bfe3cf;color:var(--green);margin:10px 0 0">✓ Tahapan ini sudah selesai</div>` : ''}
+    ${w && s !== 'done' ? `<div class="small" style="color:var(--amber);margin-top:6px">⏳ Tahap sebelumnya (${esc(w)}) belum selesai</div>` : ''}`;
+  const assign = s === 'done' ? '' : isLive(t.p) && !batchOn(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">${batchLabel(t.p, t.bi)} belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="batchStart" data-pid="${t.p.id}" data-bid="${t.b.id}">▶ Mulai batch</button></div>` : !isLive(t.p) ? `<div class="banner" style="margin:14px 0 0">Proyek ini belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${t.p.id}">▶ Mulai produksi</button></div>` : `<div style="margin-top:14px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="asgDate" value="${pl ? pl.date : UI.date}" style="width:170px"></div>
+    <label class="f" style="margin-top:10px">${s === 'planned' ? 'Pindahkan ke' : 'Tugaskan ke'}</label>${empPicker('assignEmp', `data-key="${esc(key)}"`)}`;
+  const foot = (s !== 'done' ? `<button class="btn" data-act="markDone" data-key="${esc(key)}">✓ Tandai selesai</button>` : '')
+    + (s !== 'todo' ? `<button class="btn danger" data-act="resetTask" data-key="${esc(key)}">${s === 'done' ? 'Batalkan selesai' : 'Kembalikan ke antrian'}</button>` : '')
+    + `<button class="btn ghost" data-act="closeModal">Tutup</button>`;
+  modal(`<span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${stepColor(t.step)};margin-right:6px"></span>${esc(t.step)}`, info + assign, foot);
+}
+
+// thickness dropdown; keeps an older free-text value selectable so editing never silently changes it
+const sizeOptions = cur => [...S.sizes, ...(cur && !S.sizes.includes(cur) ? [cur] : [])].map(s => `<option ${s === cur ? 'selected' : ''}>${esc(s)}</option>`).join('');
+let F = null; // project form state
+// The form edits a project as a list of board colours (pattern + optional product type, papan, number of batches).
+// Colours are not stored: they are rebuilt from the batches, which keep their own pattern / product.
+function colorsOf(p){
+  const list = [];
+  p.batches.forEach(b => {
+    const pattern = b.pattern || p.pattern || '', product = b.product || '';
+    let c = list.find(x => x.pattern === pattern && x.product === product);
+    if (!c) list.push(c = {id:uid(), pattern, product, papan:0, nb:0});
+    c.papan += needOf(p, b); c.nb++; b.cid = c.id;
+  });
+  if (!list.length) list.push({id:uid(), pattern:p.pattern || '', product:'', papan:0, nb:1});
+  return list;
+}
+// regroup F.batches by colour; colours in `split` ('all' or a Set of ids) get their papan spread evenly over their batches
+function rebuildBatches(split){
+  const multi = F.colors.length > 1, out = [];
+  F.colors.forEach(c => {
+    const n = c.nb = Math.min(30, Math.max(1, Math.round(+c.nb || 1)));
+    let bs = F.batches.filter(b => b.cid === c.id);
+    while (bs.length < n) bs.push({id:uid(), cid:c.id, panelNeeded:0, panelDoneManual:0, live:false});
+    bs = bs.slice(0, n);
+    if (split === 'all' || (split && split.has(c.id))) { const q = Math.max(0, Math.round(+c.papan || 0)); bs.forEach((b, i) => b.panelNeeded = Math.floor(q / n) + (i < q % n ? 1 : 0)); }
+    c.papan = bs.reduce((a, b) => a + needOf(F, b), 0);
+    bs.forEach(b => { b.pattern = c.pattern; b.product = multi ? c.product : ''; });
+    out.push(...bs);
+  });
+  F.batches = out;
+}
+function openProjectForm(pid){
+  const p = pid ? S.projects.find(x => x.id === pid) : null;
+  F = p ? JSON.parse(JSON.stringify(p)) : {id:uid(), owner:'client', cat:'FN', client:'', name:'', qty:1, pattern:'', size:'10mm', deadline:'', notes:'', woodNeeded:0, woodStock:0,
+    steps:[...S.steps.FN], batches:[{id:uid(), panelNeeded:0, panelDoneManual:0, pattern:'', live:false}], archived:false, live:false, createdAt:Date.now(), _new:true};
+  F.colors = colorsOf(F); rebuildBatches(null);
+  renderProjectForm();
+}
+function renderProjectForm(){
+  const clients = [...new Set(S.projects.filter(p => p.owner === 'client' && p.client).map(p => p.client))];
+  const allSteps = [...new Set([...S.steps[F.cat], ...F.steps])], multi = F.colors.length > 1;
+  const body = `<div class="fgrid">
+    <div><label class="f">Untuk</label><div class="segctl"><button class="${F.owner === 'client' ? 'on' : ''}" data-act="fSet" data-k="owner" data-v="client">Client</button><button class="${F.owner === 'internal' ? 'on' : ''}" data-act="fSet" data-k="owner" data-v="internal">Internal</button></div></div>
+    <div><label class="f">Kategori</label><div class="segctl"><button class="${F.cat === 'FN' ? 'on' : ''}" data-act="fSet" data-k="cat" data-v="FN">Furniture</button><button class="${F.cat === 'KYPT' ? 'on' : ''}" data-act="fSet" data-k="cat" data-v="KYPT">Keychain & Petite</button></div></div>
+    ${F.owner === 'client' ? `<div><label class="f">Nama client</label><input type="text" data-f="client" value="${esc(F.client)}" list="clientList" placeholder="mis. CIMB"><datalist id="clientList">${clients.map(c => `<option value="${esc(c)}">`).join('')}</datalist></div>` : ''}
+    <div class="${F.owner === 'client' ? '' : 'full'}"><label class="f">Nama produk</label><input type="text" data-f="name" value="${esc(F.name)}" placeholder="mis. Dropbox"></div>
+    <div><label class="f">Ketebalan</label><select data-f="size">${sizeOptions(F.size)}</select></div>
+    <div><label class="f">Total qty (pcs)</label><input type="number" min="1" data-f="qty" value="${F.qty}"></div>
+    <div><label class="f">Deadline</label><input type="date" data-f="deadline" value="${F.deadline}"></div>
+    ${F.cat === 'FN' ? `<div><label class="f">Kayu dibutuhkan</label><input type="number" min="0" data-f="woodNeeded" value="${F.woodNeeded || 0}"></div><div><label class="f">Stok kayu</label><input type="number" min="0" data-f="woodStock" value="${F.woodStock || 0}"></div>` : ''}
+    <div class="full"><label class="f">Tahapan yang dibutuhkan</label><div class="checks">${allSteps.map(s => `<label class="${F.steps.includes(s) ? 'on' : ''}"><input type="checkbox" ${F.steps.includes(s) ? 'checked' : ''} data-ch="fStep" data-s="${esc(s)}">${esc(s)}</label>`).join('')}</div></div>
+    <div class="full"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><label class="f grow" style="margin:0">Warna papan</label>
+      <button class="btn sm" data-act="fAddColor">+ Tambah warna</button></div>
+      <table class="btable"><thead><tr><th>Pattern / warna</th>${multi ? '<th>Jenis produk</th>' : ''}<th style="width:110px">Papan needed</th><th style="width:90px">Jumlah batch</th>${multi ? '<th style="width:28px"></th>' : ''}</tr></thead><tbody>
+      ${F.colors.map((c, i) => `<tr><td><input type="text" value="${esc(c.pattern)}" data-cf="pattern" data-ci="${i}" placeholder="mis. Merah Kartu"></td>
+        ${multi ? `<td><input type="text" value="${esc(c.product)}" data-cf="product" data-ci="${i}" placeholder="${esc(F.name || 'sama dengan nama produk')}"></td>` : ''}
+        <td><input type="number" min="0" value="${c.papan}" data-cf="papan" data-ch="fColorSplit" data-ci="${i}"></td>
+        <td><input type="number" min="1" max="30" value="${c.nb}" data-cf="nb" data-ch="fColorSplit" data-ci="${i}"></td>
+        ${multi ? `<td><button class="icon-btn" data-act="fDelColor" data-ci="${i}" title="Hapus warna ini">✕</button></td>` : ''}</tr>`).join('')}
+      </tbody></table>
+      ${multi ? `<div class="small muted" style="margin-top:4px">Total ${F.colors.reduce((a, c) => a + c.papan, 0)} papan · ${F.batches.length} batch. Jenis produk boleh dikosongkan kalau sama dengan nama produk.</div>` : ''}</div>
+    <div class="full"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><label class="f grow" style="margin:0">Batch</label>
+      <button class="btn sm" data-act="fSplit">Bagi rata papan</button></div>
+      <table class="btable"><thead><tr><th></th><th>Warna</th><th style="width:110px">Papan needed</th></tr></thead><tbody>
+      ${F.batches.map((b, i) => { const c = F.colors.find(x => x.id === b.cid) || {}; return `<tr><td class="small muted" style="white-space:nowrap">Batch ${i + 1}</td><td class="small">${esc(c.pattern || '–')}${multi && c.product ? ' · ' + esc(c.product) : ''}</td><td><input type="number" min="0" value="${needOf(F, b)}" data-bf="panelNeeded" data-ch="fBatchPanel" data-i="${i}"></td></tr>`; }).join('')}
+      </tbody></table></div>
+    <div class="full"><label class="f">Catatan</label><textarea rows="2" data-f="notes">${esc(F.notes)}</textarea></div></div>`;
+  modal(F._new ? 'Proyek baru' : 'Edit proyek', body, `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveProj">Simpan</button>`, true);
+}
+
+/* ============ ACTIONS ============ */
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1900); }
+const commit = (msg) => { save(); render(); if (msg) toast(msg); };
+
+function assignTask(key, empId, date){
+  delete S.doneManual[key];
+  const pl = S.plots.find(x => x.type === 'task' && x.key === key);
+  if (pl) Object.assign(pl, {emp: empId, date, done: false});
+  else S.plots.push({id: uid(), type: 'task', key, emp: empId, date, done: false});
+  const t = taskByKey(key);
+  commit(`${t ? t.step : 'Tugas'} → ${emp(empId)?.name} (${fmtDate(date)})`);
+}
+
+const ACT = {
+  page: d => { UI.page = d.page; localStorage.setItem('dre-page', d.page); render(); window.scrollTo(0, 0); },
+  setf: d => { UI[d.k] = d.v; render(); },
+  seg: d => { const same = UI.fOwner === d.o && UI.fCat === d.c; UI.fOwner = same ? 'all' : d.o; UI.fCat = same ? 'all' : d.c; render(); },
+  openProj: d => { UI.page = 'projects'; UI.collapsed[d.id] = false; UI.openProj = d.id; render(); setTimeout(() => { const el = document.querySelector(`[data-act="toggleProj"][data-id="${d.id}"]`); el && el.scrollIntoView({behavior:'smooth', block:'start'}); }, 30); },
+  queueGroup: d => { UI.queueOpen.has(d.id) ? UI.queueOpen.delete(d.id) : UI.queueOpen.add(d.id); render(); },
+  queueAll: () => { const all = UI._qg.every(id => UI.queueOpen.has(id)); UI._qg.forEach(id => all ? UI.queueOpen.delete(id) : UI.queueOpen.add(id)); render(); },
+  panelGroup: d => { UI.panelOpen.has(d.id) ? UI.panelOpen.delete(d.id) : UI.panelOpen.add(d.id); render(); },
+  panelAll: () => { const all = UI._pg.every(id => UI.panelOpen.has(id)); UI._pg.forEach(id => all ? UI.panelOpen.delete(id) : UI.panelOpen.add(id)); render(); },
+  selMode: () => { UI.selMode = !UI.selMode; UI.sel.clear(); UI.openProj = null; render(); },
+  selToggle: d => { UI.sel.has(d.id) ? UI.sel.delete(d.id) : UI.sel.add(d.id); render(); },
+  selAll: () => { const all = UI._list.every(id => UI.sel.has(id)); UI._list.forEach(id => all ? UI.sel.delete(id) : UI.sel.add(id)); render(); },
+  resetFilters: () => { UI.fOwner = 'all'; UI.fCat = 'all'; UI.pStatus = 'all'; UI.pq = ''; render(); },
+  bulk: d => {
+    const ps = S.projects.filter(p => UI.sel.has(p.id) && UI._list.includes(p.id)), n = ps.length;
+    if (!n) return;
+    const done = msg => { UI.sel.clear(); UI.selMode = false; commit(msg); };
+    if (d.op === 'start') { ps.forEach(p => { p.live = true; if (!p.batches.some(b => batchOn(p, b)) && p.batches[0]) p.batches[0].live = true; }); done(`${n} proyek mulai produksi`); }
+    else if (d.op === 'stop') { ps.forEach(p => p.live = false); done(`Produksi ${n} proyek dihentikan`); }
+    else if (d.op === 'archive') { const a = !UI.showArchived; ps.forEach(p => p.archived = a); done(a ? `${n} proyek diarsipkan` : `${n} proyek aktif lagi`); }
+    else if (d.op === 'delete') {
+      const go = () => { ps.forEach(p => removeProject(p.id)); done(`${n} proyek dihapus`); }, msg = `Hapus ${n} proyek? Plotting & panel terkait ikut terhapus.`;
+      if (typeof ask === 'function') ask(msg, `Hapus ${n} proyek`, go); else if (confirm(msg)) go();
+    }
+  },
+  toggleProj: d => { if (UI.selMode) return ACT.selToggle(d); if (UI.projView === 'grid') UI.openProj = UI.openProj === d.id ? null : d.id; else UI.collapsed[d.id] = !UI.collapsed[d.id]; render(); },
+  openTile: d => { if (UI.selMode) return ACT.selToggle(d); UI.openProj = d.id; render(); setTimeout(() => document.querySelector(`[data-act="toggleProj"][data-id="${d.id}"]`)?.scrollIntoView({behavior:'smooth', block:'start'}), 30); },
+  projView: d => { UI.projView = d.v; try { localStorage.setItem('dre-projview', d.v); } catch(e) {} render(); },
+  startProj: d => { const p = S.projects.find(x => x.id === d.id); p.live = true; if (!p.batches.some(b => batchOn(p, b)) && p.batches[0]) p.batches[0].live = true; closeModal(); commit(`${projName(p)} mulai produksi: ${p.batches.filter(b => batchOn(p, b)).length} batch masuk Plotting & Panel`); },
+  batchStart: d => { const p = S.projects.find(x => x.id === d.pid), bi = p.batches.findIndex(x => x.id === d.bid); p.batches[bi].live = true; closeModal(); commit(`${batchLabel(p, bi)} ${projName(p)} masuk Plotting & Panel`); },
+  batchStop: d => { const p = S.projects.find(x => x.id === d.pid), bi = p.batches.findIndex(x => x.id === d.bid); p.batches[bi].live = false; commit(`${batchLabel(p, bi)} dihentikan: keluar dari antrian Plotting & Panel`); },
+  batchStartAll: d => { const p = S.projects.find(x => x.id === d.pid); p.batches.forEach(b => b.live = true); commit(`Semua batch ${projName(p)} masuk Plotting & Panel`); },
+  pauseProj: d => { const p = S.projects.find(x => x.id === d.id); p.live = false; commit('Produksi dihentikan: proyek tidak muncul lagi di antrian Plotting & Panel'); },
+  toggleArchived: () => { UI.showArchived = !UI.showArchived; render(); },
+  newProj: () => openProjectForm(),
+  editProj: d => openProjectForm(d.id),
+  archiveProj: d => { const p = S.projects.find(x => x.id === d.id); p.archived = !p.archived; commit(p.archived ? 'Proyek diarsipkan' : 'Proyek aktif lagi'); },
+  delProj: d => {
+    const p = S.projects.find(x => x.id === d.id);
+    if (!confirm(`Hapus proyek "${projName(p)}"? Plotting & panel terkait ikut terhapus.`)) return;
+    S.projects = S.projects.filter(x => x.id !== d.id);
+    S.plots = S.plots.filter(x => !(x.type === 'task' && x.key.startsWith(d.id + '|')));
+    S.panels = S.panels.filter(x => x.pid !== d.id);
+    Object.keys(S.doneManual).forEach(k => k.startsWith(d.id + '|') && delete S.doneManual[k]);
+    commit('Proyek dihapus');
+  },
+  cell: d => openTaskModal(d.key),
+  pickTask: d => openTaskModal(d.key),
+  assignEmp: d => { const date = document.getElementById('asgDate')?.value || UI.date; closeModal(); assignTask(d.key, d.emp, date); },
+  markDone: d => { const pl = S.plots.find(x => x.type === 'task' && x.key === d.key); if (pl) pl.done = true; else S.doneManual[d.key] = true; closeModal(); commit('Ditandai selesai ✓'); },
+  resetTask: d => { S.plots = S.plots.filter(x => !(x.type === 'task' && x.key === d.key)); delete S.doneManual[d.key]; closeModal(); commit('Kembali ke antrian'); },
+  pAdj: d => { const p = S.projects.find(x => x.id === d.pid); p[d.k] = Math.max(0, pcsStats(p)[d.k] + (+d.d)); commit(); },
+  addBatch: d => {
+    const p = S.projects.find(x => x.id === d.id), last = p.batches[p.batches.length - 1] || {}, sf = shortfall(p);
+    const cols = colorsOf(JSON.parse(JSON.stringify(p))), lastPat = last.pattern || p.pattern || '';
+    modal(`Tambah batch · ${esc(projName(p))}`, `<div class="fgrid">
+      ${cols.length > 1 ? `<div><label class="f">Warna papan</label><select id="nbColor">${cols.map((c, i) => `<option value="${i}" ${c.pattern === lastPat && c.product === (last.product || '') ? 'selected' : ''}>${esc(c.pattern)}${c.product ? ' · ' + esc(c.product) : ''}</option>`).join('')}</select></div>` : ''}
+      <div><label class="f">Papan needed</label><input type="number" id="nbQty" min="1" value="${needOf(p, last) || 1}"></div></div>
+      ${p.owner === 'internal' ? `<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:13px;cursor:pointer"><input type="checkbox" id="nbLive" ${isLive(p) ? 'checked' : ''} style="accent-color:var(--green);width:16px;height:16px">Langsung mulai batch ini (masuk Plotting & Panel)</label>` : ''}${sf ? `<p class="small muted">Pcs jadi masih kurang ${sf} pcs.</p>` : ''}`,
+      `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveBatch" data-id="${p.id}">Tambah batch ${p.batches.length + 1}</button>`);
+    setTimeout(() => document.getElementById('nbQty')?.select(), 20);
+  },
+  saveBatch: d => {
+    const p = S.projects.find(x => x.id === d.id);
+    const qty = Math.max(1, +document.getElementById('nbQty').value || 1);
+    const cols = colorsOf(JSON.parse(JSON.stringify(p))), sel = document.getElementById('nbColor'), c = cols[sel ? +sel.value : 0] || {};
+    p.batches.push({id:uid(), panelNeeded:qty, panelDoneManual:0, pattern:c.pattern || '', product:c.product || '', live:!!document.getElementById('nbLive')?.checked});
+    UI.collapsed[p.id] = false; closeModal(); commit(`Batch ${p.batches.length} ditambahkan, tahapannya masuk antrian`);
+  },
+  panelAdj: d => { const p = S.projects.find(x => x.id === d.pid), b = p.batches.find(x => x.id === d.bid); b.panelDoneManual = Math.max(0, (b.panelDoneManual || 0) + (+d.d)); commit(); },
+  closeOverlay: (d, el, e) => { if (e.target === el) closeModal(); },
+  closeModal: () => closeModal(),
+  dateShift: d => { UI.date = addDays(UI.date, +d.n * (UI.plotView === 'week' ? 7 : 1)); render(); },
+  plotView: d => { UI.plotView = d.v; try { localStorage.setItem('dre-plotview', d.v); } catch(e) {} render(); },
+  openDay: d => { UI.date = d.d; UI.plotView = 'day'; render(); window.scrollTo(0, 0); },
+  addCustomCell: d => {
+    modal(`Tugas lain · ${esc(emp(d.emp)?.name)} · ${fmtDate(d.d, {weekday:'long', day:'numeric', month:'short'})}`,
+      `<input type="text" id="cTxt" placeholder="mis. Bersih-bersih Lapak"><div class="taglist">${S.quickTasks.map(q => `<button class="tag" style="padding:5px 10px" data-act="quickPick" data-v="${esc(q)}">${esc(q)}</button>`).join('')}</div>`,
+      `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveCustom" data-emp="${d.emp}" data-d="${d.d}">Tambah</button>`);
+    setTimeout(() => document.getElementById('cTxt')?.focus(), 20);
+  },
+  quickPick: d => { const i = document.getElementById('cTxt'); i.value = d.v; i.focus(); },
+  saveCustom: d => { const v = document.getElementById('cTxt').value.trim(); if (!v) return toast('Isi nama tugasnya dulu'); S.plots.push({id:uid(), type:'custom', text:v, emp:d.emp, date:d.d, done:false}); closeModal(); commit('Tugas ditambahkan'); },
+  dateToday: () => { UI.date = today(); render(); },
+  pdateShift: d => { UI.panelDate = addDays(UI.panelDate, +d.n * (UI.panelView === 'week' ? 7 : 1)); render(); },
+  shareShift: d => { UI.shareDate = addDays(UI.shareDate, +d.n); render(); },
+  shareToday: () => { UI.shareDate = today(); render(); },
+  pdateToday: () => { UI.panelDate = today(); render(); },
+  panelView: d => { UI.panelView = d.v; try { localStorage.setItem('dre-panelview', d.v); } catch(e) {} render(); },
+  openPanelDay: d => { UI.panelDate = d.d; UI.panelView = 'day'; render(); window.scrollTo(0, 0); },
+  qcat: d => { UI.qCat = d.v; render(); },
+  unplot: d => { const x = S.plots.find(y => y.id === d.id); S.plots = S.plots.filter(y => y.id !== d.id); commit(x && x.type === 'task' ? 'Kembali ke antrian' : 'Tugas dihapus'); },
+  carry: () => { const d = UI.date; let n = 0; S.plots.forEach(x => { if (x.date < d && !x.done && x.date >= addDays(d, -30)) { x.date = d; n++; } }); commit(`${n} tugas dipindahkan ke ${fmtDate(d)}`); },
+  print: () => window.print(),
+  pickNeed: d => {
+    const p = S.projects.find(x => x.id === d.pid);
+    const b = p.batches.find(x => x.id === d.bid) || {};
+    modal(d.no ? `Papan #${d.no} · ${esc(b.pattern || p.pattern || '')}` : 'Cetak panel di mesin…', `<div class="small muted">${esc(projName(p))}</div><div style="margin-top:12px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="pnDate" value="${UI.panelDate}" style="width:170px"></div><div class="emp-pick">${S.machines.map(m => `<button data-act="needTo" data-m="${m.id}" data-pid="${d.pid}" data-bid="${d.bid}" data-qty="${d.qty || ''}" data-no="${d.no || ''}">${esc(m.name)}</button>`).join('')}</div>`);
+  },
+  needTo: d => { const date = document.getElementById('pnDate')?.value || UI.panelDate; closeModal(); addNeedToMachine(d.pid, d.bid, d.m, date, +d.qty || 0, d.no); },
+  delPanel: d => { S.panels = S.panels.filter(x => x.id !== d.id); commit(); },
+  addStock: d => {
+    modal('Panel stok / manual', `<div class="fgrid"><div class="full"><label class="f">Pattern / warna</label><input type="text" id="spPat" placeholder="mis. Biru Muda"></div>
+      <div><label class="f">Ketebalan</label><select id="spSize">${sizeOptions('10mm')}</select></div>
+      <div><label class="f">Jumlah panel</label><input type="number" id="spQty" value="1" min="1"></div></div>`,
+      `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveStock" data-m="${d.m}" data-d="${d.d || ''}">Tambah</button>`);
+    setTimeout(() => document.getElementById('spPat')?.focus(), 20);
+  },
+  saveStock: d => { const pat = document.getElementById('spPat').value.trim(); if (!pat) return toast('Isi pattern dulu'); S.panels.push({id:uid(), date:d.d || UI.panelDate, machine:d.m, pattern:pat, size:document.getElementById('spSize').value, qty:+document.getElementById('spQty').value || 1, pid:'', batchId:'', done:false}); closeModal(); commit('Panel ditambahkan'); },
+  // project form
+  fSet: d => { F[d.k] = d.v; if (d.k === 'cat') F.steps = [...S.steps[d.v]]; renderProjectForm(); },
+  fSplit: () => { rebuildBatches('all'); renderProjectForm(); },
+  fAddColor: () => { F.colors.push({id:uid(), pattern:'', product:'', papan:0, nb:1}); rebuildBatches(null); renderProjectForm(); setTimeout(() => document.querySelectorAll('[data-cf="pattern"]')[F.colors.length - 1]?.focus(), 20); },
+  fDelColor: d => { if (F.colors.length < 2) return; F.colors.splice(+d.ci, 1); rebuildBatches(null); renderProjectForm(); },
+  saveProj: () => {
+    if (!F.name.trim()) return toast('Nama produk wajib diisi');
+    if (F.owner === 'client' && !F.client.trim()) return toast('Nama client wajib diisi');
+    if (!F.steps.length) return toast('Pilih minimal 1 tahapan');
+    if (F.colors.length > 1 && F.colors.some(c => !c.pattern.trim())) return toast('Isi nama warna di setiap baris warna papan');
+    const isNew = F._new; delete F._new;
+    if (F.owner === 'internal') F.client = '';
+    rebuildBatches(null);
+    F.pattern = [...new Set(F.colors.map(c => c.pattern.trim()).filter(Boolean))].join(', ');
+    F.batches.forEach(b => { b.panelNeeded = needOf(F, b); b.pattern = (b.pattern || '').trim(); b.product = (b.product || '').trim(); delete b.qty; delete b.cid; });
+    delete F.colors; delete F.panelTotal;
+    const i = S.projects.findIndex(x => x.id === F.id);
+    if (i >= 0) {
+      // clean up plots of removed batches/steps
+      const valid = new Set(); F.batches.forEach(b => F.steps.forEach(s => valid.add(F.id + '|' + b.id + '|' + s)));
+      S.plots = S.plots.filter(x => !(x.type === 'task' && x.key.startsWith(F.id + '|') && !valid.has(x.key)));
+      const bids = new Set(F.batches.map(b => b.id)); S.panels = S.panels.filter(x => x.pid !== F.id || bids.has(x.batchId));
+      S.projects[i] = F;
+    } else S.projects.unshift(F);
+    closeModal(); commit(isNew ? 'Proyek dibuat — tahapannya sudah masuk antrian plotting' : 'Proyek disimpan');
+  },
+  // settings
+  addEmp: () => { const el = document.getElementById('newEmp'), n = el.value.trim(); if (!n) return; S.employees.push({id:uid(), name:n, color:EMP_COLORS[S.employees.length % EMP_COLORS.length], active:true}); commit('Karyawan ditambahkan'); },
+  empToggle: d => { const e = emp(d.id); e.active = !e.active; commit(); },
+  addMachine: () => { const n = document.getElementById('newM').value.trim(); if (!n) return; S.machines.push({id:uid(), name:n}); commit(); },
+  delMachine: d => { if (S.panels.some(x => x.machine === d.id) && !confirm('Mesin ini punya riwayat panel. Tetap hapus?')) return; S.machines = S.machines.filter(m => m.id !== d.id); S.panels = S.panels.filter(x => x.machine !== d.id); commit(); },
+  delQuick: d => { S.quickTasks.splice(+d.i, 1); commit(); },
+  stepMove: d => { const a = S.steps[d.cat], i = +d.i, j = i + (+d.d); if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; commit(); },
+  stepDel: d => { if (!confirm(`Hapus tahapan "${S.steps[d.cat][+d.i]}" dari daftar default? (Proyek lama tidak berubah)`)) return; S.steps[d.cat].splice(+d.i, 1); commit(); },
+  exportJson: () => download(`DRE-backup-${today()}.json`, JSON.stringify(S, null, 1), 'application/json'),
+  exportCsv: () => {
+    const rows = [['Tanggal','Karyawan','Tugas','Proyek','Batch','Papan','Selesai','Kehadiran']];
+    [...S.plots].sort((a, b) => a.date.localeCompare(b.date)).forEach(x => {
+      const t = x.type === 'task' ? taskByKey(x.key) : null;
+      rows.push([x.date, emp(x.emp)?.name || '', t ? t.step : x.text, t ? projName(t.p) : '', t ? t.bi + 1 : '', t ? needOf(t.p, t.b) : '', x.done ? 'Ya' : 'Belum', (S.attendance[x.date] || {})[x.emp] || 'Masuk']);
+    });
+    download(`DRE-plotting-${today()}.csv`, '﻿' + rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n'), 'text/csv');
+  },
+  loadSample: () => { if (!confirm('Ganti semua data dengan data contoh?')) return; S = seed(); commit('Data contoh dimuat'); },
+  wipe: () => { if (!confirm('Hapus SEMUA proyek, plotting, dan panel? (Karyawan & pengaturan tetap). Download backup dulu kalau ragu.')) return; Object.assign(S, {projects:[], plots:[], panels:[], doneManual:{}, attendance:{}}); commit('Data dikosongkan'); },
+};
+
+// free board numbers of a batch: 1..need minus the numbers already on a machine schedule
+function freePapanNos(p, b, rem){
+  const used = new Set(S.panels.filter(x => x.batchId === b.id && x.no).map(x => +x.no)), out = [];
+  for (let i = 1; out.length < rem && i <= needOf(p, b) + rem; i++) if (!used.has(i)) out.push(i);
+  return out;
+}
+function addNeedToMachine(pid, bid, mid, date, qty, no){
+  const p = S.projects.find(x => x.id === pid), b = p.batches.find(x => x.id === bid);
+  const rem = Math.max(1, (needOf(p, b)) - panelDone(b) - panelPlanned(b)), q = qty ? Math.min(qty, rem) : rem;
+  if (no && S.panels.some(x => x.batchId === bid && +x.no === +no)) no = freePapanNos(p, b, 1)[0];
+  const pattern = b.pattern || p.pattern || '?';
+  S.panels.push(Object.assign({id:uid(), date:date || UI.panelDate, machine:mid, pattern, size:p.size || '', qty:q, pid, batchId:bid, done:false}, no ? {no:+no} : {}));
+  commit(`${no ? 'Papan #' + no + ' ' + pattern : q + ' papan'} → ${S.machines.find(m => m.id === mid)?.name} · ${fmtDate(date || UI.panelDate)}`);
+}
+function download(name, text, type){ const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], {type})); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+
+const CH = {
+  plotDone: el => { const x = S.plots.find(y => y.id === el.dataset.id); x.done = el.checked; commit(el.checked ? 'Selesai ✓' : ''); },
+  pNum: el => { const p = S.projects.find(x => x.id === el.dataset.pid); p[el.dataset.k] = Math.max(0, Math.round(+el.value || 0)); commit(); },
+  att: el => { (S.attendance[UI.date] = S.attendance[UI.date] || {})[el.dataset.emp] = el.value; commit(); },
+  date: el => { if (el.value) { UI.date = el.value; render(); } },
+  shareDone: el => { UI.shareDone = el.checked; render(); },
+  pdate: el => { if (el.value) { UI.panelDate = el.value; render(); } },
+  panelDone: el => { S.panels.find(y => y.id === el.dataset.id).done = el.checked; commit(el.checked ? 'Panel jadi ✓' : ''); },
+  panelQty: el => { S.panels.find(y => y.id === el.dataset.id).qty = Math.max(1, +el.value || 1); commit(); },
+  fColorSplit: el => { rebuildBatches(new Set([F.colors[+el.dataset.ci].id])); renderProjectForm(); },
+  fBatchPanel: () => { rebuildBatches(null); renderProjectForm(); },
+  fStep: el => { const s = el.dataset.s; F.steps = el.checked ? [...F.steps, s] : F.steps.filter(x => x !== s); renderProjectForm(); },
+  empName: el => { emp(el.dataset.id).name = el.value.trim() || 'Tanpa nama'; commit(); },
+  empColor: el => { emp(el.dataset.id).color = el.value; commit(); },
+  mName: el => { S.machines.find(m => m.id === el.dataset.id).name = el.value; commit(); },
+  importJson: el => {
+    const f = el.files[0]; if (!f) return;
+    f.text().then(txt => { const d = JSON.parse(txt); if (!d.version || !d.projects) throw new Error('bukan file backup DRE'); if (!confirm('Restore akan mengganti semua data di perangkat ini. Lanjut?')) return; S = d; commit('Data berhasil di-restore'); })
+      .catch(e => toast('Gagal restore: ' + e.message));
+  },
+};
+
+/* ============ EVENTS ============ */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  if (el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
+  const fn = ACT[el.dataset.act]; if (fn) fn(el.dataset, el, e);
+});
+document.addEventListener('change', e => { const el = e.target; if (el.dataset && el.dataset.ch && CH[el.dataset.ch]) CH[el.dataset.ch](el, e); });
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.f !== undefined && F) F[el.dataset.f] = el.type === 'number' ? +el.value : el.value;
+  if (el.dataset.bf !== undefined && F) F.batches[+el.dataset.i][el.dataset.bf] = el.type === 'number' ? +el.value : el.value;
+  if (el.dataset.cf !== undefined && F) F.colors[+el.dataset.ci][el.dataset.cf] = el.type === 'number' ? +el.value : el.value;
+  if (el.dataset.in) { UI[el.dataset.in] = el.value; render(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key !== 'Enter') return;
+  const el = e.target, v = (el.value || '').trim();
+  if (el.dataset.addcustom && v) { S.plots.push({id:uid(), type:'custom', text:v, emp:el.dataset.addcustom, date:UI.date, done:false}); if (!S.quickTasks.includes(v) && !/ - /.test(v)) S.quickTasks.push(v); commit('Tugas ditambahkan'); setTimeout(() => document.querySelector(`[data-addcustom="${el.dataset.addcustom}"]`)?.focus(), 0); }
+  if (el.dataset.addstep && v) { S.steps[el.dataset.addstep].push(v); commit('Tahapan ditambahkan'); }
+  if (el.dataset.addquick && v) { S.quickTasks.push(v); commit(); }
+  if (el.id === 'cTxt') document.querySelector('[data-act="saveCustom"]')?.click();
+  if (el.id === 'newEmp') ACT.addEmp(); if (el.id === 'newM') ACT.addMachine();
+});
+
+// drag & drop
+let DRAG = null;
+document.addEventListener('dragstart', e => {
+  const el = e.target.closest && e.target.closest('[data-drag]'); if (!el) return;
+  DRAG = {...el.dataset}; el.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', el.dataset.drag);
+});
+document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drop-on').forEach(x => x.classList.remove('dragging', 'drop-on')); });
+const dropOK = (zone) => DRAG && ({emp:['task','plot'], queue:['plot'], machine:['need','panel'], pqueue:['panel']}[zone.dataset.drop] || []).includes(DRAG.drag);
+document.addEventListener('dragover', e => {
+  const z = e.target.closest && e.target.closest('[data-drop]');
+  document.querySelectorAll('.drop-on').forEach(x => x !== z && x.classList.remove('drop-on'));
+  if (z && dropOK(z)) { e.preventDefault(); z.classList.add('drop-on'); }
+});
+document.addEventListener('drop', e => {
+  const z = e.target.closest && e.target.closest('[data-drop]'); if (!z || !dropOK(z)) return;
+  e.preventDefault(); const D = DRAG; DRAG = null;
+  const zt = z.dataset.drop;
+  if (zt === 'emp' && D.drag === 'task') assignTask(D.key, z.dataset.emp, z.dataset.date || UI.date);
+  else if (zt === 'emp' && D.drag === 'plot') {
+    const x = S.plots.find(y => y.id === D.id), date = z.dataset.date || x.date;
+    if (x.emp !== z.dataset.emp || x.date !== date) { x.emp = z.dataset.emp; x.date = date; commit('Dipindah ke ' + emp(x.emp).name + ' · ' + fmtDate(date)); } else render();
+  }
+  else if (zt === 'queue') ACT.unplot({id: D.id});
+  else if (zt === 'machine' && D.drag === 'need') addNeedToMachine(D.pid, D.bid, z.dataset.m, z.dataset.date, +D.qty || 0, D.no);
+  else if (zt === 'machine' && D.drag === 'panel') { const x = S.panels.find(y => y.id === D.id); x.machine = z.dataset.m; if (z.dataset.date) x.date = z.dataset.date; commit(); }
+  else if (zt === 'pqueue') ACT.delPanel({id: D.id});
+});
+
+render();
+</script>
+</body>
+</html>

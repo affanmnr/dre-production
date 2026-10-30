@@ -1,0 +1,14 @@
+# Working files from building the app (scripts, Excel copy) - not part of the website
+xl_src/
+
+# Local tools and secrets
+.claude/
+.env
+.env.*
+node_modules/
+.vercel/
+
+# OS clutter
+Thumbs.db
+desktop.ini
+.DS_Store
