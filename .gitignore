@@ -12,3 +12,6 @@ node_modules/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Data backups downloaded from the app
+DRE-backup-*.json
