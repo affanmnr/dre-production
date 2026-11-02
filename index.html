@@ -792,8 +792,8 @@ const isLive = p => p.live !== false;
 const liveProjects = () => activeProjects().filter(isLive);
 // internal projects start each batch on its own (older batches count as started); client batches simply follow the project
 const batchOn = (p, b) => p.owner !== 'internal' || b.live !== false;
-// a batch only reaches Plotting once at least one of its boards is finished (batches that need no boards are never held back)
-const panelReady = (p, b) => !needOf(p, b) || panelDone(b) > 0;
+// a batch only reaches Plotting once all of its boards are finished (batches that need no boards are never held back)
+const panelReady = (p, b) => panelDone(b) >= needOf(p, b);
 const batchCount = p => isLive(p) && p.batches.some(b => !batchOn(p, b)) ? `${p.batches.filter(b => batchOn(p, b)).length}/${p.batches.length} batch jalan` : `${p.batches.length} batch`;
 const statusBadge = p => isLive(p) ? '<span class="badge b-live">On going</span>' : '<span class="badge b-draft">Belum mulai</span>';
 const activeProjects = () => S.projects.filter(p => !p.archived);
@@ -1090,7 +1090,7 @@ PAGES.plot = () => {
       <section class="card queue ${mob && !UI.mQueue ? 'mhidden' : ''}" data-drop="queue">
         <div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Antrian tugas</h2><span class="badge">${queue.length} tugas</span></div>
           ${qGroups.length ? `<div class="small muted" style="display:flex;gap:6px">${qGroups.length} proyek<div class="grow"></div>${q ? '' : `<button class="linkbtn" data-act="queueAll">${qAllOpen ? 'Tutup semua' : 'Buka semua'}</button>`}</div>` : ''}
-          ${waitingPanel ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${waitingPanel} batch menunggu papan pertama selesai</div>` : ''}
+          ${waitingPanel ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${waitingPanel} batch menunggu semua papannya selesai</div>` : ''}
           <input type="search" id="q" data-in="q" placeholder="Cari tahapan / proyek…" value="${esc(UI.q)}">
           <div class="qfilters">${qseg('Untuk', 'qOwner', [['all', 'Semua'], ['client', 'Client'], ['internal', 'Internal']])}${qseg('Kategori', 'qCat', [['all', 'Semua'], ['FN', 'FN'], ['KYPT', 'KY&PT']])}</div></div>
         <div class="list">${qhtml || '<div class="empty" style="margin-top:8px">Antrian kosong 👍</div>'}</div>
@@ -1356,7 +1356,7 @@ function openTaskModal(key){
     ${s === 'planned' ? `<div class="banner" style="background:var(--blue-soft);border-color:#c5d5f6;color:var(--blue);margin:10px 0 0">Sudah diplot ke <b>${esc(emp(pl.emp)?.name || '?')}</b> · ${fmtLong(pl.date)}</div>` : ''}
     ${s === 'done' ? `<div class="banner" style="background:var(--green-soft);border-color:#bfe3cf;color:var(--green);margin:10px 0 0">✓ Tahapan ini sudah selesai</div>` : ''}
     ${w && s !== 'done' ? `<div class="small" style="color:var(--amber);margin-top:6px">⏳ Tahap sebelumnya (${esc(w)}) belum selesai</div>` : ''}`;
-  const assign = s === 'done' ? '' : s === 'todo' && isLive(t.p) && batchOn(t.p, t.b) && !panelReady(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">⏳ Belum ada papan ${batchLabel(t.p, t.bi)} yang selesai, jadi tahapannya belum bisa diplot. Selesaikan minimal 1 papan di halaman Panel.</div>` : isLive(t.p) && !batchOn(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">${batchLabel(t.p, t.bi)} belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="batchStart" data-pid="${t.p.id}" data-bid="${t.b.id}">▶ Mulai batch</button></div>` : !isLive(t.p) ? `<div class="banner" style="margin:14px 0 0">Proyek ini belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${t.p.id}">▶ Mulai produksi</button></div>` : `<div style="margin-top:14px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="asgDate" value="${pl ? pl.date : UI.date}" style="width:170px"></div>
+  const assign = s === 'done' ? '' : s === 'todo' && isLive(t.p) && batchOn(t.p, t.b) && !panelReady(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">⏳ Papan ${batchLabel(t.p, t.bi)} baru selesai ${panelDone(t.b)}/${needOf(t.p, t.b)}, jadi tahapannya belum bisa diplot. Selesaikan semua papannya di halaman Panel.</div>` : isLive(t.p) && !batchOn(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">${batchLabel(t.p, t.bi)} belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="batchStart" data-pid="${t.p.id}" data-bid="${t.b.id}">▶ Mulai batch</button></div>` : !isLive(t.p) ? `<div class="banner" style="margin:14px 0 0">Proyek ini belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${t.p.id}">▶ Mulai produksi</button></div>` : `<div style="margin-top:14px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="asgDate" value="${pl ? pl.date : UI.date}" style="width:170px"></div>
     <label class="f" style="margin-top:10px">${s === 'planned' ? 'Pindahkan ke' : 'Tugaskan ke'}</label>${empPicker('assignEmp', `data-key="${esc(key)}"`)}`;
   const foot = (s !== 'done' ? `<button class="btn" data-act="markDone" data-key="${esc(key)}">✓ Tandai selesai</button>` : '')
     + (s !== 'todo' ? `<button class="btn danger" data-act="resetTask" data-key="${esc(key)}">${s === 'done' ? 'Batalkan selesai' : 'Kembalikan ke antrian'}</button>` : '')
