@@ -1133,8 +1133,12 @@ function miniCard(x){
 }
 
 /* ---------- PANEL ---------- */
+// boards scheduled on an earlier day (last 30 days) that were never ticked as finished
+const overduePanels = () => { const t = today(); return S.panels.filter(x => x.date < t && !x.done && x.date >= addDays(t, -30)); };
+const countPapan = list => list.reduce((a, x) => a + (+x.qty || 0), 0);
 PAGES.panel = () => {
   const d = UI.panelDate, mob = isMobile(), week = UI.panelView === 'week' && !mob;
+  const overdue = overduePanels();
   const needs = [];
   liveProjects().forEach(p => p.batches.forEach((b, bi) => {
     if (!batchOn(p, b)) return;
@@ -1172,6 +1176,7 @@ PAGES.panel = () => {
       <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="panelView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="panelView" data-v="day">Harian</button></div>
       <div class="datenav"><button class="btn sm" data-act="pdateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="pdateShift" data-n="1">›</button>
       ${d !== today() ? '<button class="btn sm" data-act="pdateToday">Hari ini</button>' : ''}<input type="date" value="${d}" data-ch="pdate"></div></div>`}
+    ${overdue.length ? `<div class="banner">⚠️ <b>${countPapan(overdue)} papan</b> dari hari sebelumnya belum dicentang selesai.<div class="grow"></div><button class="btn sm" data-act="pcarry">Pindahkan ke ${fmtDate(today())}</button></div>` : ''}
     <div class="plot">
       ${mob ? `<button class="mtoggle ${UI.mNeeds ? 'on' : ''}" data-act="mNeeds">📦 Kebutuhan panel <span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span><span class="grow"></span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></button>` : ''}
       <section class="card queue ${mob && !UI.mNeeds ? 'mhidden' : ''}" data-drop="pqueue"><div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Kebutuhan panel</h2><span class="badge">${needs.reduce((a, n) => a + n.rem, 0)} papan</span></div>
@@ -1573,6 +1578,7 @@ const ACT = {
   mMenu: () => modal('Menu', `<div class="small muted" style="margin:-4px 0 12px">${esc(ME ? (ME.name || ME.email) : '')}${ROLE ? ' · ' + ROLE_LABEL[ROLE] : ''}</div>
     <div class="mmenu">${canSee('settings') ? '<button class="btn" data-act="mGo" data-page="settings">⚙️ Pengaturan</button>' : ''}<button class="btn" data-act="logout">↪ Keluar</button></div>`),
   mGo: d => { closeModal(); ACT.page({page: d.page}); },
+  pcarry: () => { const list = overduePanels(), t = today(); list.forEach(x => x.date = t); commit(`${countPapan(list)} papan dipindahkan ke ${fmtDate(t)}`); },
   pdateToday: () => { UI.panelDate = today(); render(); },
   panelView: d => { UI.panelView = d.v; try { localStorage.setItem('dre-panelview', d.v); } catch(e) {} render(); },
   openPanelDay: d => { UI.panelDate = d.d; UI.panelView = 'day'; render(); window.scrollTo(0, 0); },
