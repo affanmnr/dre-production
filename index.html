@@ -403,7 +403,6 @@ button.stask,button.papan{font-family:inherit}
     <button class="nav-btn" data-act="page" data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v12a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M8.5 7V5a1.5 1.5 0 0 1 1.5-1.5h4A1.5 1.5 0 0 1 15.5 5v2"/><path d="M4 12h16"/></svg>Proyek</button>
     <button class="nav-btn" data-act="page" data-page="plot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3 3-4.6 5.5-4.6s4.7 1.6 5.5 4.6"/><path d="M16 6.5h5M16 10.5h5M17.5 14.5h3.5"/></svg>Plotting</button>
     <button class="nav-btn" data-act="page" data-page="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="5" rx="1"/><rect x="3" y="11" width="18" height="5" rx="1"/><path d="M7 20h10"/></svg>Panel</button>
-    <button class="nav-btn" data-act="page" data-page="cnc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="3" width="16" height="6" rx="1.2"/><path d="M12 9v4M9 13h6l-3 7z"/></svg>CNC</button>
     <button class="nav-btn" data-act="page" data-page="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg>Hari Ini</button>
     <button class="nav-btn" data-act="page" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3.6 15H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1A2 2 0 1 1 7 5.4l.1.1A1.6 1.6 0 0 0 9.8 4.4V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>Pengaturan</button>
     <button class="nav-btn nav-logout" data-act="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg>Keluar</button>
@@ -420,7 +419,7 @@ button.stask,button.papan{font-family:inherit}
 const LS_KEY = 'dre-production-v1';
 const DEF_STEPS = {
   FN: ['CNC Plastic','CNC Kayu','Amplas Plastic','Amplas Kayu','Dempul','Cat Dasar','Cat Primer','Finishing','Solder','Assembly'],
-  KYPT: ['Amplas','CNC Plastic','Finishing','Assembly']
+  KYPT: ['Amplas','CNC','Finishing','Assembly']
 };
 const CAT_LABEL = {FN:'Furniture', KYPT:'Keychain & Petite'};
 const CAT_SHORT = {FN:'FN', KYPT:'KY&PT'};
@@ -471,10 +470,10 @@ function seed(){
   const projects = [cimb, erm, kaisar, medy, ocean, soleil, lamp, locean, crois, cheese, lune];
   const k = (p, i, s) => p.id + '|' + p.batches[i].id + '|' + s;
   const doneManual = {};
-  [k(cimb,0,'CNC Plastic'), k(cimb,0,'Amplas Plastic'), k(locean,0,'Amplas'), k(locean,0,'CNC Plastic'), k(locean,0,'Finishing'), k(locean,2,'Amplas'), k(locean,2,'CNC Plastic')].forEach(x => doneManual[x] = true);
+  [k(cimb,0,'CNC Plastic'), k(cimb,0,'Amplas Plastic'), k(locean,0,'Amplas'), k(locean,0,'CNC'), k(locean,0,'Finishing'), k(locean,2,'Amplas'), k(locean,2,'CNC')].forEach(x => doneManual[x] = true);
   const plots = [
     {id:uid(),type:'task',key:k(locean,1,'Amplas'),emp:'e1',date:t,done:false},
-    {id:uid(),type:'task',key:k(locean,1,'CNC Plastic'),emp:'e1',date:t,done:false},
+    {id:uid(),type:'task',key:k(locean,1,'CNC'),emp:'e1',date:t,done:false},
     {id:uid(),type:'custom',text:'Bersih-bersih Lapak',emp:'e1',date:t,done:false},
     {id:uid(),type:'custom',text:'Cacah - Biru Muda',emp:'e2',date:t,done:false},
     {id:uid(),type:'task',key:k(locean,2,'Finishing'),emp:'e2',date:t,done:false},
@@ -489,7 +488,6 @@ function seed(){
   return {
     version:1, employees:E, steps:JSON.parse(JSON.stringify(DEF_STEPS)),
     machines:[{id:'m1',name:'Mesin Kecil'},{id:'m2',name:'Mesin Besar'},{id:'m3',name:'Cooling'}],
-    cncMachines:[{id:'c1',name:'Mesin CNC 1'}],
     sizes:['5mm','7mm','10mm','20mm'],
     quickTasks:['Bersih-bersih Lapak','Cacah','Pilah & Cuci','Cutting'],
     projects, plots, doneManual, panels, attendance:{}
@@ -502,7 +500,7 @@ function seed(){
    signed in sees changes live; what each person may change is enforced by the database's access rules. */
 const SUPABASE_URL = 'https://iooejsiuqotpqdgmrkta.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_4GGSCjgT0la9g_AcFvdbfw_EkM9u1C3'; // publishable key: meant to be public
-const CFG_KEYS = ['employees','steps','machines','cncMachines','sizes','quickTasks'];
+const CFG_KEYS = ['employees','steps','machines','sizes','quickTasks'];
 const COLS = ['projects','plots','panels','attendance'];
 const PLOT_WINDOW_DAYS = 120;
 const lsGet = k => { try { return localStorage.getItem(k); } catch(e) { return null; } };
@@ -515,7 +513,7 @@ let S = emptyState();
 let READY = false, CAN_WRITE = true, PENDING_RENDER = false, SESSION = null, ME = null, PEOPLE = [], DATA_STARTED = false;
 
 // Roles come from the person's row in `profiles`; the database enforces the same split.
-const ROLE_PAGES = {master:['dashboard','projects','plot','panel','cnc','today','settings'], full:['dashboard','projects','plot','panel','cnc','today','settings'], ops:['plot','panel','cnc','today'], viewer:['today'], pending:['today']};
+const ROLE_PAGES = {master:['dashboard','projects','plot','panel','today','settings'], full:['dashboard','projects','plot','panel','today','settings'], ops:['plot','panel','today'], viewer:['today'], pending:['today']};
 const ROLE_LABEL = {master:'Master admin', full:'Akses penuh', ops:'Admin plotting & panel', viewer:'Karyawan (lihat Hari Ini)', pending:'Menunggu persetujuan'};
 const ROLE_OPTS = [['pending', 'Menunggu (belum ada akses)'], ['viewer', 'Karyawan: lihat Hari Ini'], ['ops', 'Admin: Plotting, Panel & Hari Ini'], ['full', 'Akses penuh'], ['master', 'Master admin']];
 const WRITERS = ['master', 'full', 'ops'];
@@ -654,9 +652,16 @@ async function startData(){
   DATA_STARTED = true;
   try { await loadAll(); }
   catch (e) { DATA_STARTED = false; setSync('Gagal memuat data'); toast('Gagal memuat data: ' + ((e && e.message) || e)); return; }
-  READY = true; subscribeData();
-  if (renameKyCnc() + migrateCncPlots()) save();
-  setSync(); render();
+  READY = true; if (undoCncTab()) save(); subscribeData(); setSync(); render();
+}
+// a separate CNC tab was tried and taken back out: its unfinished schedule entries go back to the Plotting queue
+function undoCncTab(){
+  if (!WRITERS.includes(ROLE)) return 0;
+  const before = S.plots.length;
+  S.plots = S.plots.filter(x => !(x.type === 'task' && (x.cnc || x.no) && !S.doneManual[x.key]));
+  let n = before - S.plots.length;
+  S.plots.forEach(x => { if (x.cnc || x.no) { delete x.cnc; delete x.no; n++; } });
+  return n;
 }
 async function loadPeople(){
   const { data } = await sb.from('profiles').select('id,email,name,role,created_at').order('created_at');
@@ -734,8 +739,6 @@ const isMobile = () => MQ.matches;
 (MQ.addEventListener ? MQ.addEventListener('change', () => render()) : MQ.addListener(() => render()));
 if (location.hash === '#hariini') UI.page = 'today';
 UI.pStatus = 'all'; UI.openProj = null; UI.qOwner = 'all'; UI.sel = new Set(); UI.selMode = false; UI.panelOpen = new Set(); UI.queueOpen = new Set();
-UI.cncDate = today(); UI.cncOpen = new Set();
-UI.cncView = (() => { try { return localStorage.getItem('dre-cncview'); } catch(e) { return null; } })() || 'week';
 UI.panelView = (() => { try { return localStorage.getItem('dre-panelview'); } catch(e) { return null; } })() || 'week';
 
 /* ============ DERIVED ============ */
@@ -884,7 +887,7 @@ PAGES.dashboard = () => {
 
   // today per employee
   const todayRows = activeEmps().map(e => {
-    const pl = S.plots.filter(x => x.date === t && x.emp === e.id && !isCncPlot(x));
+    const pl = S.plots.filter(x => x.date === t && x.emp === e.id);
     const att = (S.attendance[t] || {})[e.id] || 'Masuk';
     const d = pl.filter(x => x.done).length;
     return `<div class="emp-today"><div class="av" style="background:${e.color}">${initials(e.name)}</div>
@@ -1022,7 +1025,7 @@ function projectCard(p, pm, open){
       const key = p.id + '|' + b.id + '|' + step, s = taskStatus(key, pm), pl = pm[key];
       let cls = s, txt = '○';
       if (s === 'done') txt = '✓';
-      else if (s === 'planned') { const e = emp(pl.emp); txt = esc(pl.cnc ? cncName(pl.cnc) : e ? e.name : '?') + '<br><span style="font-weight:500">' + (pl.date === t ? 'hari ini' : fmtDate(pl.date)) + '</span>'; if (pl.date < t) cls += ' late'; }
+      else if (s === 'planned') { const e = emp(pl.emp); txt = esc(e ? e.name : '?') + '<br><span style="font-weight:500">' + (pl.date === t ? 'hari ini' : fmtDate(pl.date)) + '</span>'; if (pl.date < t) cls += ' late'; }
       return `<td><button class="cell ${cls}" data-act="cell" data-key="${esc(key)}" title="${esc(step)}">${txt}</button></td>`;
     }).join('');
     const d = panelDone(b), pp = panelPlanned(b), need = needOf(p, b);
@@ -1054,9 +1057,7 @@ PAGES.plot = () => {
   const mob = isMobile(), week = UI.plotView === 'week' && !mob;
   const pm = plotMap(), d = UI.date, q = UI.q.toLowerCase();
   const waitingPanel = liveProjects().reduce((n, p) => n + p.batches.filter(b => batchOn(p, b) && !panelReady(p, b)).length, 0);
-  // a step waits until the step before it in the same batch is done (e.g. Finishing after CNC)
-  const waitingStep = tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && !isCnc(t.step) && batchOn(t.p, t.b) && panelReady(t.p, t.b) && waitingFor(t, pm)).length;
-  const queue = tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && !isCnc(t.step) && batchOn(t.p, t.b) && panelReady(t.p, t.b) && !waitingFor(t, pm) && (UI.qCat === 'all' || t.p.cat === UI.qCat) && (UI.qOwner === 'all' || t.p.owner === UI.qOwner) && (!q || (t.step + ' ' + projName(t.p)).toLowerCase().includes(q)));
+  const queue = tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && batchOn(t.p, t.b) && panelReady(t.p, t.b) && (UI.qCat === 'all' || t.p.cat === UI.qCat) && (UI.qOwner === 'all' || t.p.owner === UI.qOwner) && (!q || (t.step + ' ' + projName(t.p)).toLowerCase().includes(q)));
   const groups = {}; queue.forEach(t => (groups[t.p.id] = groups[t.p.id] || []).push(t));
   // within each project, tasks that are ready to work on come first
   Object.values(groups).forEach(list => list.forEach(t => t.wait = waitingFor(t, pm)));
@@ -1077,11 +1078,11 @@ PAGES.plot = () => {
         : `<div class="pg-sum">${steps.filter(s => byStep[s]).map(s => `<span class="pchip" style="box-shadow:inset 3px 0 0 ${stepColor(s)}">${esc(s)} <b>${byStep[s]}</b></span>`).join('')}</div>`}
     </div>`;
   }).join('');
-  const overdue = S.plots.filter(x => x.date < d && !x.done && !x.cnc && !isCncPlot(x) && x.date >= addDays(d, -30) && (x.type === 'custom' || taskByKey(x.key)));
+  const overdue = S.plots.filter(x => x.date < d && !x.done && x.date >= addDays(d, -30) && (x.type === 'custom' || taskByKey(x.key)));
   const emps = activeEmps();
   const att = S.attendance[d] || {};
   const cols = emps.map(e => {
-    const pl = S.plots.filter(x => x.date === d && x.emp === e.id && !isCncPlot(x));
+    const pl = S.plots.filter(x => x.date === d && x.emp === e.id);
     const a = att[e.id] || 'Masuk';
     const cards = pl.map(x => {
       let main = '', sub = '', c = '#6b7280';
@@ -1112,7 +1113,6 @@ PAGES.plot = () => {
         <div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Antrian tugas</h2><span class="badge">${queue.length} tugas</span></div>
           ${qGroups.length ? `<div class="small muted" style="display:flex;gap:6px">${qGroups.length} proyek<div class="grow"></div>${q ? '' : `<button class="linkbtn" data-act="queueAll">${qAllOpen ? 'Tutup semua' : 'Buka semua'}</button>`}</div>` : ''}
           ${waitingPanel ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${waitingPanel} batch menunggu semua papannya selesai</div>` : ''}
-          ${waitingStep ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${waitingStep} tahapan menunggu tahap sebelumnya selesai</div>` : ''}
           <input type="search" id="q" data-in="q" placeholder="Cari tahapan / proyek…" value="${esc(UI.q)}">
           <div class="qfilters">${qseg('Untuk', 'qOwner', [['all', 'Semua'], ['client', 'Client'], ['internal', 'Internal']])}${qseg('Kategori', 'qCat', [['all', 'Semua'], ['FN', 'FN'], ['KYPT', 'KY&PT']])}</div></div>
         <div class="list">${qhtml || '<div class="empty" style="margin-top:8px">Antrian kosong 👍</div>'}</div>
@@ -1128,14 +1128,14 @@ function weekBoard(emps){
   if (!emps.length) return '<div class="empty">Tambah karyawan di Pengaturan.</div>';
   const t = today(), days = Array.from({length: 7}, (_, i) => addDays(UI.date, i));
   const head = '<div></div>' + emps.map(e => {
-    const n = S.plots.filter(x => x.emp === e.id && !isCncPlot(x) && days.includes(x.date));
+    const n = S.plots.filter(x => x.emp === e.id && days.includes(x.date));
     return `<div class="wk-h"><div class="av" style="background:${e.color};width:26px;height:26px;font-size:11px">${initials(e.name)}</div><div><b>${esc(e.name)}</b><div class="colcount">${n.filter(x => x.done).length}/${n.length} selesai</div></div></div>`;
   }).join('');
   const rows = days.map(d => {
     const off = new Date(d + 'T00:00').getDay() === 0;
     const label = `<button class="wk-day ${d === t ? 'today' : ''} ${off ? 'off' : ''}" data-act="openDay" data-d="${d}" title="Lihat detail harian"><b>${fmtDate(d, {weekday:'long'})}</b><span>${fmtDate(d)}</span>${d === t ? '<em>Hari ini</em>' : ''}</button>`;
     const cells = emps.map(e => {
-      const pl = S.plots.filter(x => x.date === d && x.emp === e.id && !isCncPlot(x)), a = (S.attendance[d] || {})[e.id];
+      const pl = S.plots.filter(x => x.date === d && x.emp === e.id), a = (S.attendance[d] || {})[e.id];
       return `<div class="wk-cell ${a === 'Gamasuk' ? 'absent' : ''}" data-drop="emp" data-emp="${e.id}" data-date="${d}">
         ${a && a !== 'Masuk' ? `<span class="badge ${a === 'Gamasuk' ? 'b-late' : a === 'Telat' ? 'b-soon' : ''}" style="align-self:flex-start">${a}</span>` : ''}
         ${pl.map(miniCard).join('')}
@@ -1244,7 +1244,7 @@ function dayStrip(sel, act){
 // pick tasks from the queue for one employee on the selected day (works without drag & drop)
 function openAssignSheet(empId){
   const e = emp(empId), pm = plotMap(), groups = [];
-  tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && !isCnc(t.step) && batchOn(t.p, t.b) && panelReady(t.p, t.b) && !waitingFor(t, pm)).forEach(t => {
+  tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && batchOn(t.p, t.b) && panelReady(t.p, t.b)).forEach(t => {
     t.wait = waitingFor(t, pm);
     let g = groups.find(x => x.p === t.p); if (!g) groups.push(g = {p: t.p, batches: []});
     let b = g.batches.find(x => x.b === t.b); if (!b) g.batches.push(b = {b: t.b, bi: t.bi, items: []});
@@ -1278,7 +1278,7 @@ PAGES.today = () => {
   const d = UI.shareDate, emps = activeEmps(), att = S.attendance[d] || {}, show = x => UI.shareDone || !x.done;
   let nTask = 0, nPanel = 0;
   const empCols = emps.map(e => {
-    const pl = S.plots.filter(x => x.date === d && x.emp === e.id && !isCncPlot(x) && show(x)), a = att[e.id] || 'Masuk';
+    const pl = S.plots.filter(x => x.date === d && x.emp === e.id && show(x)), a = att[e.id] || 'Masuk';
     const items = pl.map(x => {
       if (x.type === 'custom') return `<li class="${x.done ? 'done' : ''}"><b>${esc(x.text)}</b></li>`;
       const t = taskByKey(x.key); if (!t) return '';
@@ -1298,12 +1298,6 @@ PAGES.today = () => {
     }).join('');
     return `<div class="sh-col"><div class="sh-eh"><b>${esc(m.name)}</b><span class="sh-n">${tot} papan</span></div><ol>${items || '<li class="none">Tidak ada jadwal</li>'}</ol></div>`;
   }).join('');
-  const cncCols = S.cncMachines.map(m => {
-    const list = S.plots.filter(x => x.type === 'task' && x.cnc === m.id && x.date === d && show(x) && taskByKey(x.key));
-    nTask += list.length;
-    const items = list.map(x => { const t = taskByKey(x.key); return `<li class="${x.done ? 'done' : ''}" style="--c:${stepColor(t.step)}"><b>${esc(t.step)}</b><span>${esc(prodName(t.p, t.b))} · ${batchLabel(t.p, t.bi)} · ${esc(papanLabel(t.p, t.b))}</span></li>`; }).join('');
-    return `<div class="sh-col"><div class="sh-eh"><b>⚙️ ${esc(m.name)}</b><span class="sh-n">${list.length} tahapan</span></div><ol>${items || '<li class="none">Tidak ada jadwal</li>'}</ol></div>`;
-  }).join('');
   const now = new Date();
   return `<div class="head"><div><h1>Hari Ini</h1><div class="sub">Ringkasan tugas & panel untuk dibagikan ke grup karyawan. Screenshot kartu putih di bawah.</div></div><div class="grow"></div>
       <label class="small" style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" ${UI.shareDone ? 'checked' : ''} data-ch="shareDone" style="accent-color:var(--brand)">Tampilkan yang sudah selesai</label>
@@ -1314,130 +1308,13 @@ PAGES.today = () => {
         <div class="sh-sum"><b>${nTask}</b> tugas · <b>${nPanel}</b> papan</div></div>
       <div class="sh-sec">Produksi Umum</div><div class="sh-grid">${empCols || '<div class="empty">Belum ada karyawan aktif.</div>'}</div>
       <div class="sh-sec">Cetak panel</div><div class="sh-grid">${machCols}</div>
-      ${S.cncMachines.length ? `<div class="sh-sec">Mesin CNC</div><div class="sh-grid">${cncCols}</div>` : ''}
       <div class="sh-foot">Diperbarui ${now.toLocaleDateString('id-ID', {day:'numeric', month:'short'})} ${now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}</div>
     </div>`;
 };
 
-/* ---------- CNC ---------- */
-// Steps whose name contains "CNC" are scheduled on CNC machines here instead of on people in Plotting.
-// A CNC schedule entry is an ordinary task plot with `cnc` (machine id) set and no employee.
-const isCnc = step => /cnc/i.test(step || '');
-// rename a step in a category everywhere it is used: the default list, projects, ticks and schedules
-function renameStep(cat, from, to){
-  const list = S.steps[cat], i = list.indexOf(from);
-  if (i < 0 || !to || list.includes(to)) return 0;
-  list[i] = to;
-  let n = 0;
-  S.projects.filter(p => p.cat === cat && p.steps.includes(from)).forEach(p => {
-    n++;
-    p.steps = p.steps.map(s => s === from ? to : s);
-    const pre = p.id + '|', end = '|' + from;
-    Object.keys(S.doneManual).forEach(k => { if (k.startsWith(pre) && k.endsWith(end)) { S.doneManual[k.slice(0, -from.length) + to] = true; delete S.doneManual[k]; } });
-    S.plots.forEach(x => { if (x.type === 'task' && x.key.startsWith(pre) && x.key.endsWith(end)) x.key = x.key.slice(0, -from.length) + to; });
-  });
-  return n;
-}
-// KY&PT's "CNC" step is called "CNC Plastic", like Furniture; renamed once by someone who may edit settings
-const renameKyCnc = () => ['master', 'full'].includes(ROLE) && S.steps.KYPT.includes('CNC') && !S.steps.KYPT.includes('CNC Plastic') ? renameStep('KYPT', 'CNC', 'CNC Plastic') + 1 : 0;
-// any schedule entry for a CNC step: those never show on people's boards, only in the CNC tab
-const isCncPlot = x => x.type === 'task' && isCnc((taskByKey(x.key) || {}).step);
-// CNC steps that were given to a person before the CNC tab existed move to the first CNC machine (finished ones stay as history)
-function migrateCncPlots(){
-  if (!WRITERS.includes(ROLE) || !S.cncMachines.length) return 0;
-  let n = 0;
-  S.plots.forEach(x => { if (!x.done && !x.cnc && x.emp && isCncPlot(x)) { x.cnc = S.cncMachines[0].id; x.emp = null; n++; } });
-  return n;
-}
-const cncName = id => (S.cncMachines.find(m => m.id === id) || {}).name || 'Mesin CNC';
-const cncPlots = (d, mid) => S.plots.filter(x => x.type === 'task' && x.cnc && x.date === d && (!mid || x.cnc === mid) && taskByKey(x.key));
-const overdueCnc = () => { const t = today(); return S.plots.filter(x => x.type === 'task' && x.cnc && x.date < t && !x.done && x.date >= addDays(t, -30) && taskByKey(x.key)); };
-const cncQueue = (pm = plotMap()) => tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && isCnc(t.step) && batchOn(t.p, t.b) && panelReady(t.p, t.b) && !waitingFor(t, pm));
-const cncWaiting = (pm = plotMap()) => tasksOf(liveProjects(), pm).filter(t => t.status === 'todo' && isCnc(t.step) && batchOn(t.p, t.b) && panelReady(t.p, t.b) && waitingFor(t, pm)).length;
-function cncCard(x, mini){
-  const t = taskByKey(x.key); if (!t) return '';
-  const sub = esc(prodName(t.p, t.b)) + ' · ' + (mini ? 'B' + (t.bi + 1) : batchLabel(t.p, t.bi)) + ' · ' + esc(papanLabel(t.p, t.b));
-  return `<div class="${mini ? 'mcard' : 'pcard'} ${x.done ? 'done' : ''}" draggable="true" data-drag="plot" data-id="${x.id}" style="--c:${stepColor(t.step)}" title="${esc(t.step)} · ${sub}">
-    <input type="checkbox" ${x.done ? 'checked' : ''} data-ch="plotDone" data-id="${x.id}" title="Tandai selesai">
-    <div class="tx"><b>${esc(t.step)}</b><div class="s">${sub}</div></div>
-    <button class="icon-btn no-print" data-act="unplot" data-id="${x.id}" title="Kembalikan ke antrian">✕</button></div>`;
-}
-function assignCnc(key, mid, date){
-  delete S.doneManual[key];
-  const pl = S.plots.find(x => x.type === 'task' && x.key === key);
-  if (pl) Object.assign(pl, {emp: null, cnc: mid, date, done: false});
-  else S.plots.push({id: uid(), type: 'task', key, emp: null, cnc: mid, date, done: false});
-  const t = taskByKey(key);
-  commit(`${t ? t.step : 'CNC'} → ${cncName(mid)} (${fmtDate(date)})`);
-}
-const cncPicker = key => `<div class="emp-pick">${S.cncMachines.map(m => `<button data-act="assignCncBtn" data-key="${esc(key)}" data-m="${m.id}">⚙️ ${esc(m.name)}</button>`).join('') || '<div class="small muted">Tambah mesin CNC di Pengaturan.</div>'}</div>`;
-PAGES.cnc = () => {
-  const d = UI.cncDate, mob = isMobile(), week = UI.cncView === 'week' && !mob, pm = plotMap();
-  const queue = cncQueue(pm), overdue = overdueCnc();
-  const waiting = liveProjects().reduce((n, p) => n + (orderSteps(p).some(isCnc) ? p.batches.filter(b => batchOn(p, b) && !panelReady(p, b)).length : 0), 0);
-  const groups = [];
-  queue.forEach(t => { let g = groups.find(x => x.p === t.p); if (!g) groups.push(g = {p: t.p, items: []}); g.items.push(t); });
-  UI._cg = groups.map(g => g.p.id);
-  const allOpen = groups.length && groups.every(g => UI.cncOpen.has(g.p.id));
-  const qhtml = groups.map(({p, items}) => {
-    const open = UI.cncOpen.has(p.id);
-    return `<div class="pgroup qg ${open ? 'open' : ''}" style="border-left-color:${stepColor('CNC')}">
-      <button class="pg-h" data-act="cncGroup" data-id="${p.id}"><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
-        <span class="grow"><b>${esc(projName(p))}</b><span class="s"><span class="badge b-${p.cat}" style="font-size:10px;padding:1px 6px">${CAT_SHORT[p.cat]}</span> ${deadlineBadge(p)}</span></span><span class="badge">${items.length} batch</span></button>
-      ${open ? `<div class="papans" style="padding:0 10px 10px">${items.map(t => `<div class="stask" draggable="true" data-drag="task" data-key="${esc(t.key)}" data-act="pickTask" style="--c:${stepColor(t.step)};white-space:normal" title="Tarik ke mesin CNC atau klik">${esc(t.step)} · ${batchLabel(p, t.bi)} · ${esc(papanLabel(p, t.b))}</div>`).join('')}</div>`
-        : `<div class="pg-sum">${items.map(t => `<span class="pchip" style="box-shadow:inset 3px 0 0 ${stepColor(t.step)}">B${t.bi + 1} <b>${needOf(p, t.b)}</b> papan</span>`).join('')}</div>`}
-    </div>`;
-  }).join('');
-  const cols = S.cncMachines.map(m => {
-    const list = cncPlots(d, m.id);
-    return `<div class="col" data-drop="cnc" data-m="${m.id}" data-date="${d}"><div class="col-h"><div><div class="n">⚙️ ${esc(m.name)}</div><div class="colcount">${list.filter(x => x.done).length}/${list.length} selesai</div></div></div>
-      ${list.map(x => cncCard(x)).join('') || '<div class="small muted" style="text-align:center;padding:18px 6px"><span class="dk">Tarik tahapan CNC ke sini</span><span class="mb">Belum ada jadwal</span></div>'}
-      <div class="addline"><button class="btn sm addtask" data-act="pickCncFor" data-m="${m.id}">+ Tahapan CNC</button></div></div>`;
-  }).join('');
-  const chev = '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>';
-  return `${mob ? `<div class="mhead"><h1>CNC</h1><div class="grow"></div>${d !== today() ? '<button class="btn sm" data-act="cdateToday">Hari ini</button>' : ''}</div>${dayStrip(d, 'cncDay')}<div class="mdate">${fmtLong(d)}</div>` : `<div class="head"><div><h1>CNC</h1><div class="sub">Jadwal tahapan CNC per mesin. Centang kalau sudah selesai, tahapan di proyek ikut tercentang.</div></div><div class="grow"></div>
-      <div class="segctl seg-sm"><button class="${week ? 'on' : ''}" data-act="cncView" data-v="week">Mingguan</button><button class="${week ? '' : 'on'}" data-act="cncView" data-v="day">Harian</button></div>
-      <div class="datenav"><button class="btn sm" data-act="cdateShift" data-n="-1">‹</button><div class="d">${week ? fmtDate(d) + ' – ' + fmtDate(addDays(d, 6), {day:'numeric', month:'short', year:'numeric'}) : fmtDate(d, {weekday:'long', day:'numeric', month:'long'})}</div><button class="btn sm" data-act="cdateShift" data-n="1">›</button>
-      ${d !== today() ? '<button class="btn sm" data-act="cdateToday">Hari ini</button>' : ''}<input type="date" value="${d}" data-ch="cdate"></div></div>`}
-    ${overdue.length ? `<div class="banner">⚠️ <b>${overdue.length} tahapan CNC</b> dari hari sebelumnya belum dicentang selesai.<div class="grow"></div><button class="btn sm" data-act="ccarry">Pindahkan ke ${fmtDate(today())}</button></div>` : ''}
-    <div class="plot">
-      ${mob ? `<button class="mtoggle ${UI.mCnc ? 'on' : ''}" data-act="mCnc">⚙️ Antrian CNC <span class="badge">${queue.length} batch</span><span class="grow"></span>${chev}</button>` : ''}
-      <section class="card queue ${mob && !UI.mCnc ? 'mhidden' : ''}" data-drop="queue"><div class="qhead"><div style="display:flex;align-items:center"><h2 class="grow" style="margin:0">Antrian CNC</h2><span class="badge">${queue.length} batch</span></div>
-        ${groups.length ? `<div class="small muted" style="display:flex;gap:6px">${groups.length} proyek<div class="grow"></div><button class="linkbtn" data-act="cncAll">${allOpen ? 'Tutup semua' : 'Buka semua'}</button></div>` : ''}
-        ${waiting ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${waiting} batch menunggu semua papannya selesai</div>` : ''}
-        ${(n => n ? `<div class="small" style="color:var(--amber);font-weight:600">⏳ ${n} batch menunggu tahap sebelumnya (mis. Amplas) selesai</div>` : '')(cncWaiting(pm))}</div>
-        <div class="list">${qhtml || '<div class="empty" style="margin-top:8px">Antrian CNC kosong 👍</div>'}</div></section>
-      ${!S.cncMachines.length ? '<div class="empty">Belum ada mesin CNC. Tambahkan di Pengaturan → Mesin CNC.</div>' : week ? cncWeek() : `<section class="board" style="grid-template-columns:repeat(${S.cncMachines.length},minmax(220px,1fr))">${cols}</section>`}
-    </div>`;
-};
-// rows = the 7 days starting at UI.cncDate, columns = CNC machines
-function cncWeek(){
-  const t = today(), days = Array.from({length: 7}, (_, i) => addDays(UI.cncDate, i));
-  const head = '<div></div>' + S.cncMachines.map(m => {
-    const n = S.plots.filter(x => x.type === 'task' && x.cnc === m.id && days.includes(x.date) && taskByKey(x.key));
-    return `<div class="wk-h"><div><b>⚙️ ${esc(m.name)}</b><div class="colcount">${n.filter(x => x.done).length}/${n.length} selesai minggu ini</div></div></div>`;
-  }).join('');
-  const rows = days.map(d => {
-    const off = new Date(d + 'T00:00').getDay() === 0;
-    const label = `<button class="wk-day ${d === t ? 'today' : ''} ${off ? 'off' : ''}" data-act="openCncDay" data-d="${d}" title="Lihat detail harian"><b>${fmtDate(d, {weekday:'long'})}</b><span>${fmtDate(d)}</span>${d === t ? '<em>Hari ini</em>' : ''}</button>`;
-    const cells = S.cncMachines.map(m => `<div class="wk-cell" data-drop="cnc" data-m="${m.id}" data-date="${d}">${cncPlots(d, m.id).map(x => cncCard(x, true)).join('')}</div>`).join('');
-    return label + cells;
-  }).join('');
-  return `<section class="week" style="grid-template-columns:96px repeat(${S.cncMachines.length},minmax(150px,1fr))">${head}${rows}</section>`;
-}
-// phones: pick CNC steps for one machine on the selected day
-function openCncSheet(mid){
-  const groups = [];
-  cncQueue().forEach(t => { let g = groups.find(x => x.p === t.p); if (!g) groups.push(g = {p: t.p, items: []}); g.items.push(t); });
-  const body = groups.map(g => `<div class="as-proj"><div class="as-ph"><span class="badge b-${g.p.cat}">${CAT_SHORT[g.p.cat]}</span> <b>${esc(projName(g.p))}</b></div>
-    <div class="papans">${g.items.map(t => `<button class="stask" style="--c:${stepColor(t.step)}" data-act="cncTo" data-key="${esc(t.key)}" data-m="${mid}">${esc(t.step)} · ${batchLabel(g.p, t.bi)} · ${esc(papanLabel(g.p, t.b))}</button>`).join('')}</div></div>`).join('');
-  modal(`CNC untuk ${esc(cncName(mid))}`, `<div class="small muted" style="margin:-4px 0 12px">${fmtLong(UI.cncDate)} · ketuk tahapan untuk dijadwalkan, bisa beberapa sekaligus.</div>${body || '<div class="empty">Antrian CNC kosong 👍</div>'}`,
-    '<button class="btn pri" data-act="closeModal">Selesai</button>');
-}
-
 /* ---------- SETTINGS ---------- */
 PAGES.settings = () => {
-  const stepList = cat => S.steps[cat].map((s, i) => `<div class="srow"><span style="width:10px;height:10px;border-radius:3px;background:${stepColor(s)};flex:none"></span><input type="text" class="grow" value="${esc(s)}" data-ch="stepRename" data-cat="${cat}" data-i="${i}" title="Ubah nama tahapan (ikut berubah di semua proyek)">
+  const stepList = cat => S.steps[cat].map((s, i) => `<div class="srow"><span style="width:10px;height:10px;border-radius:3px;background:${stepColor(s)};flex:none"></span><span class="grow">${esc(s)}</span>
     <button class="icon-btn" data-act="stepMove" data-cat="${cat}" data-i="${i}" data-d="-1">↑</button><button class="icon-btn" data-act="stepMove" data-cat="${cat}" data-i="${i}" data-d="1">↓</button><button class="icon-btn" data-act="stepDel" data-cat="${cat}" data-i="${i}">✕</button></div>`).join('')
     + `<div class="srow"><input type="text" placeholder="Tahapan baru (Enter)" data-addstep="${cat}"></div>`;
   return `<div class="head"><h1>Pengaturan</h1></div>
@@ -1464,10 +1341,6 @@ PAGES.settings = () => {
       <h2 style="margin-top:16px">Tugas lain (pilihan cepat)</h2>
       <div class="taglist">${S.quickTasks.map((x, i) => `<span class="tag">${esc(x)}<button class="icon-btn" data-act="delQuick" data-i="${i}">✕</button></span>`).join('')}</div>
       <input type="text" placeholder="Tambah, mis. Cacah, Pilah & Cuci (Enter)" data-addquick="1"></div>
-    <div class="card"><h2>Mesin CNC</h2>
-      ${S.cncMachines.map(m => `<div class="srow"><input type="text" value="${esc(m.name)}" data-ch="cncName" data-id="${m.id}"><button class="icon-btn" data-act="delCncMachine" data-id="${m.id}">✕</button></div>`).join('')}
-      <div class="srow"><input type="text" id="newCnc" placeholder="Nama mesin CNC"><button class="btn sm pri" data-act="addCncMachine">Tambah</button></div>
-      <div class="small muted">Tahapan yang namanya mengandung "CNC" dijadwalkan di tab CNC, tidak lagi di Plotting.</div></div>
     <div class="card"><h2>Tahapan Furniture (FN)</h2>${stepList('FN')}</div>
     <div class="card"><h2>Tahapan Keychain & Petite (KY&PT)</h2>${stepList('KYPT')}</div>
     <div class="card"><h2>Backup data</h2>
@@ -1502,11 +1375,11 @@ function openTaskModal(key){
   const t = taskByKey(key); if (!t) return;
   const pm = plotMap(), s = taskStatus(key, pm), pl = pm[key], w = waitingFor(t, pm);
   const info = `<div class="small muted">${esc(prodName(t.p, t.b))} ·${batchLabel(t.p, t.bi)} · ${needOf(t.p, t.b)} papan${t.b.pattern || t.p.pattern ? ' · ' + esc(t.b.pattern || t.p.pattern) : ''}</div>
-    ${s === 'planned' ? `<div class="banner" style="background:var(--blue-soft);border-color:#c5d5f6;color:var(--blue);margin:10px 0 0">Sudah diplot ke <b>${esc(pl.cnc ? cncName(pl.cnc) : emp(pl.emp)?.name || '?')}</b> · ${fmtLong(pl.date)}</div>` : ''}
+    ${s === 'planned' ? `<div class="banner" style="background:var(--blue-soft);border-color:#c5d5f6;color:var(--blue);margin:10px 0 0">Sudah diplot ke <b>${esc(emp(pl.emp)?.name || '?')}</b> · ${fmtLong(pl.date)}</div>` : ''}
     ${s === 'done' ? `<div class="banner" style="background:var(--green-soft);border-color:#bfe3cf;color:var(--green);margin:10px 0 0">✓ Tahapan ini sudah selesai</div>` : ''}
     ${w && s !== 'done' ? `<div class="small" style="color:var(--amber);margin-top:6px">⏳ Tahap sebelumnya (${esc(w)}) belum selesai</div>` : ''}`;
-  const assign = s === 'done' ? '' : s === 'todo' && isLive(t.p) && batchOn(t.p, t.b) && !panelReady(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">⏳ Papan ${batchLabel(t.p, t.bi)} baru selesai ${panelDone(t.b)}/${needOf(t.p, t.b)}, jadi tahapannya belum bisa diplot. Selesaikan semua papannya di halaman Panel.</div>` : s === 'todo' && w ? `<div class="banner" style="margin:14px 0 0">⏳ Tahap sebelumnya (${esc(w)}) belum selesai, jadi ${esc(t.step)} belum bisa dijadwalkan.</div>` : isLive(t.p) && !batchOn(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">${batchLabel(t.p, t.bi)} belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="batchStart" data-pid="${t.p.id}" data-bid="${t.b.id}">▶ Mulai batch</button></div>` : !isLive(t.p) ? `<div class="banner" style="margin:14px 0 0">Proyek ini belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${t.p.id}">▶ Mulai produksi</button></div>` : `<div style="margin-top:14px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="asgDate" value="${pl ? pl.date : isCnc(t.step) ? UI.cncDate : UI.date}" style="width:170px"></div>
-    <label class="f" style="margin-top:10px">${isCnc(t.step) ? (s === 'planned' ? 'Pindahkan ke mesin' : 'Jadwalkan di mesin') : s === 'planned' ? 'Pindahkan ke' : 'Tugaskan ke'}</label>${isCnc(t.step) ? cncPicker(key) : empPicker('assignEmp', `data-key="${esc(key)}"`)}`;
+  const assign = s === 'done' ? '' : s === 'todo' && isLive(t.p) && batchOn(t.p, t.b) && !panelReady(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">⏳ Papan ${batchLabel(t.p, t.bi)} baru selesai ${panelDone(t.b)}/${needOf(t.p, t.b)}, jadi tahapannya belum bisa diplot. Selesaikan semua papannya di halaman Panel.</div>` : isLive(t.p) && !batchOn(t.p, t.b) ? `<div class="banner" style="margin:14px 0 0">${batchLabel(t.p, t.bi)} belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="batchStart" data-pid="${t.p.id}" data-bid="${t.b.id}">▶ Mulai batch</button></div>` : !isLive(t.p) ? `<div class="banner" style="margin:14px 0 0">Proyek ini belum mulai produksi, jadi tahapannya belum bisa diplot.<div class="grow"></div><button class="btn sm go" data-act="startProj" data-id="${t.p.id}">▶ Mulai produksi</button></div>` : `<div style="margin-top:14px;display:flex;align-items:center;gap:8px"><label class="f" style="margin:0">Tanggal</label><input type="date" id="asgDate" value="${pl ? pl.date : UI.date}" style="width:170px"></div>
+    <label class="f" style="margin-top:10px">${s === 'planned' ? 'Pindahkan ke' : 'Tugaskan ke'}</label>${empPicker('assignEmp', `data-key="${esc(key)}"`)}`;
   const foot = (s !== 'done' ? `<button class="btn" data-act="markDone" data-key="${esc(key)}">✓ Tandai selesai</button>` : '')
     + (s !== 'todo' ? `<button class="btn danger" data-act="resetTask" data-key="${esc(key)}">${s === 'done' ? 'Batalkan selesai' : 'Kembalikan ke antrian'}</button>` : '')
     + `<button class="btn ghost" data-act="closeModal">Tutup</button>`;
@@ -1590,7 +1463,7 @@ const commit = (msg) => { save(); render(); if (msg) toast(msg); };
 function assignTask(key, empId, date){
   delete S.doneManual[key];
   const pl = S.plots.find(x => x.type === 'task' && x.key === key);
-  if (pl) { Object.assign(pl, {emp: empId, date, done: false}); delete pl.cnc; }
+  if (pl) Object.assign(pl, {emp: empId, date, done: false});
   else S.plots.push({id: uid(), type: 'task', key, emp: empId, date, done: false});
   const t = taskByKey(key);
   commit(`${t ? t.step : 'Tugas'} → ${emp(empId)?.name} (${fmtDate(date)})`);
@@ -1736,29 +1609,12 @@ const ACT = {
     <div class="mmenu">${canSee('settings') ? '<button class="btn" data-act="mGo" data-page="settings">⚙️ Pengaturan</button>' : ''}<button class="btn" data-act="logout">↪ Keluar</button></div>`),
   mGo: d => { closeModal(); ACT.page({page: d.page}); },
   pcarry: () => { const list = overduePanels(), t = today(); list.forEach(x => x.date = t); commit(`${countPapan(list)} papan dipindahkan ke ${fmtDate(t)}`); },
-  cncView: d => { UI.cncView = d.v; try { localStorage.setItem('dre-cncview', d.v); } catch(e) {} render(); },
-  cdateShift: d => { UI.cncDate = addDays(UI.cncDate, +d.n * (UI.cncView === 'week' ? 7 : 1)); render(); },
-  cdateToday: () => { UI.cncDate = today(); render(); },
-  cncDay: d => { UI.cncDate = d.d; render(); },
-  openCncDay: d => { UI.cncDate = d.d; UI.cncView = 'day'; render(); window.scrollTo(0, 0); },
-  cncGroup: d => { UI.cncOpen.has(d.id) ? UI.cncOpen.delete(d.id) : UI.cncOpen.add(d.id); render(); },
-  cncAll: () => { const all = UI._cg.every(id => UI.cncOpen.has(id)); UI._cg.forEach(id => all ? UI.cncOpen.delete(id) : UI.cncOpen.add(id)); render(); },
-  mCnc: () => { UI.mCnc = !UI.mCnc; render(); },
-  pickCncFor: d => openCncSheet(d.m),
-  cncTo: d => { assignCnc(d.key, d.m, UI.cncDate); openCncSheet(d.m); },
-  assignCncBtn: d => { const date = document.getElementById('asgDate')?.value || UI.cncDate; closeModal(); assignCnc(d.key, d.m, date); },
-  ccarry: () => { const list = overdueCnc(), t = today(); list.forEach(x => x.date = t); commit(`${list.length} tahapan CNC dipindahkan ke ${fmtDate(t)}`); },
-  addCncMachine: () => { const el = document.getElementById('newCnc'), n = el.value.trim(); if (!n) return; S.cncMachines.push({id: uid(), name: n}); commit('Mesin CNC ditambahkan'); },
-  delCncMachine: d => ask(`Hapus ${cncName(d.id)}? Jadwal CNC yang belum selesai di mesin ini kembali ke antrian.`, 'Hapus mesin', () => {
-    S.plots = S.plots.filter(x => !(x.cnc === d.id && !x.done));
-    S.cncMachines = S.cncMachines.filter(m => m.id !== d.id); commit('Mesin CNC dihapus');
-  }),
   pdateToday: () => { UI.panelDate = today(); render(); },
   panelView: d => { UI.panelView = d.v; try { localStorage.setItem('dre-panelview', d.v); } catch(e) {} render(); },
   openPanelDay: d => { UI.panelDate = d.d; UI.panelView = 'day'; render(); window.scrollTo(0, 0); },
   qcat: d => { UI.qCat = d.v; render(); },
   unplot: d => { const x = S.plots.find(y => y.id === d.id); if (x && x.type === 'task') delete S.doneManual[x.key]; S.plots = S.plots.filter(y => y.id !== d.id); commit(x && x.type === 'task' ? 'Kembali ke antrian' : 'Tugas dihapus'); },
-  carry: () => { const d = UI.date; let n = 0; S.plots.forEach(x => { if (x.date < d && !x.done && !x.cnc && !isCncPlot(x) && x.date >= addDays(d, -30)) { x.date = d; n++; } }); commit(`${n} tugas dipindahkan ke ${fmtDate(d)}`); },
+  carry: () => { const d = UI.date; let n = 0; S.plots.forEach(x => { if (x.date < d && !x.done && x.date >= addDays(d, -30)) { x.date = d; n++; } }); commit(`${n} tugas dipindahkan ke ${fmtDate(d)}`); },
   print: () => window.print(),
   pickNeed: d => {
     const p = S.projects.find(x => x.id === d.pid);
@@ -1859,14 +1715,6 @@ const CH = {
   date: el => { if (el.value) { UI.date = el.value; render(); } },
   roleSet: el => { sb.from('profiles').update({role: el.value}).eq('id', el.dataset.uid).then(({error}) => toast(error ? 'Gagal mengubah akses: ' + error.message : 'Akses diperbarui')); },
   shareDone: el => { UI.shareDone = el.checked; render(); },
-  cdate: el => { if (el.value) { UI.cncDate = el.value; render(); } },
-  stepRename: el => {
-    const cat = el.dataset.cat, from = S.steps[cat][+el.dataset.i], to = el.value.trim();
-    if (!to || to === from) { el.value = from; return; }
-    if (S.steps[cat].includes(to)) { el.value = from; return toast('Nama tahapan itu sudah ada'); }
-    const n = renameStep(cat, from, to); commit(`Tahapan "${from}" diganti jadi "${to}" (${n} proyek ikut diperbarui)`);
-  },
-  cncName: el => { S.cncMachines.find(m => m.id === el.dataset.id).name = el.value.trim() || 'Mesin CNC'; commit(); },
   pdate: el => { if (el.value) { UI.panelDate = el.value; render(); } },
   panelDone: el => { S.panels.find(y => y.id === el.dataset.id).done = el.checked; commit(el.checked ? 'Panel jadi ✓' : ''); },
   panelQty: el => { S.panels.find(y => y.id === el.dataset.id).qty = Math.max(1, +el.value || 1); commit(); },
@@ -1907,7 +1755,7 @@ document.addEventListener('keydown', e => {
   if (el.dataset.addquick && v) { S.quickTasks.push(v); commit(); }
   if (['auName', 'auEmail', 'auPass', 'auNew'].includes(el.id)) document.querySelector('.auth-card .btn.pri')?.click();
   if (el.id === 'cTxt') document.querySelector('[data-act="saveCustom"]')?.click();
-  if (el.id === 'newEmp') ACT.addEmp(); if (el.id === 'newM') ACT.addMachine(); if (el.id === 'newCnc') ACT.addCncMachine();
+  if (el.id === 'newEmp') ACT.addEmp(); if (el.id === 'newM') ACT.addMachine();
 });
 
 // drag & drop
@@ -1918,7 +1766,7 @@ document.addEventListener('dragstart', e => {
   e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', el.dataset.drag);
 });
 document.addEventListener('dragend', e => { document.querySelectorAll('.dragging,.drop-on').forEach(x => x.classList.remove('dragging', 'drop-on')); });
-const dropOK = (zone) => DRAG && ({emp:['task','plot'], cnc:['task','plot'], queue:['plot'], machine:['need','panel'], pqueue:['panel']}[zone.dataset.drop] || []).includes(DRAG.drag);
+const dropOK = (zone) => DRAG && ({emp:['task','plot'], queue:['plot'], machine:['need','panel'], pqueue:['panel']}[zone.dataset.drop] || []).includes(DRAG.drag);
 document.addEventListener('dragover', e => {
   const z = e.target.closest && e.target.closest('[data-drop]');
   document.querySelectorAll('.drop-on').forEach(x => x !== z && x.classList.remove('drop-on'));
@@ -1931,13 +1779,7 @@ document.addEventListener('drop', e => {
   if (zt === 'emp' && D.drag === 'task') assignTask(D.key, z.dataset.emp, z.dataset.date || UI.date);
   else if (zt === 'emp' && D.drag === 'plot') {
     const x = S.plots.find(y => y.id === D.id), date = z.dataset.date || x.date;
-    if (x.emp !== z.dataset.emp || x.date !== date || x.cnc) { x.emp = z.dataset.emp; x.date = date; delete x.cnc; commit('Dipindah ke ' + emp(x.emp).name + ' · ' + fmtDate(date)); } else render();
-  }
-  else if (zt === 'cnc' && D.drag === 'task') assignCnc(D.key, z.dataset.m, z.dataset.date || UI.cncDate);
-  else if (zt === 'cnc' && D.drag === 'plot') {
-    const x = S.plots.find(y => y.id === D.id), t = x && x.type === 'task' && taskByKey(x.key);
-    if (!t || !isCnc(t.step)) return render();
-    Object.assign(x, {cnc: z.dataset.m, emp: null, date: z.dataset.date || x.date}); commit('Dipindah ke ' + cncName(x.cnc) + ' · ' + fmtDate(x.date));
+    if (x.emp !== z.dataset.emp || x.date !== date) { x.emp = z.dataset.emp; x.date = date; commit('Dipindah ke ' + emp(x.emp).name + ' · ' + fmtDate(date)); } else render();
   }
   else if (zt === 'queue') ACT.unplot({id: D.id});
   else if (zt === 'machine' && D.drag === 'need') addNeedToMachine(D.pid, D.bid, z.dataset.m, z.dataset.date, +D.qty || 0, D.no);
