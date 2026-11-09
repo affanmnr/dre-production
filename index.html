@@ -795,7 +795,20 @@ const batchOn = (p, b) => p.owner !== 'internal' || b.live !== false;
 // a batch only reaches Plotting once all of its boards are finished (batches that need no boards are never held back)
 const panelReady = (p, b) => panelDone(b) >= needOf(p, b);
 const batchCount = p => isLive(p) && p.batches.some(b => !batchOn(p, b)) ? `${p.batches.filter(b => batchOn(p, b)).length}/${p.batches.length} batch jalan` : `${p.batches.length} batch`;
-const statusBadge = p => isLive(p) ? '<span class="badge b-live">On going</span>' : '<span class="badge b-draft">Belum mulai</span>';
+const statusBadge = p => (isLive(p) ? '<span class="badge b-live">On going</span>' : '<span class="badge b-draft">Belum mulai</span>') + (p.round > 1 ? `<span class="badge">Putaran ${p.round}</span>` : '');
+const restartBtn = p => `<button class="btn sm go" data-act="restartProj" data-id="${p.id}">↻ Mulai lagi dari 0</button>`;
+// "Mulai lagi": run an archived project again from zero with the same details, as the same card
+function restartProject(p){
+  const pre = p.id + '|';
+  // unfinished schedule of the old run goes away; finished work stays as history
+  S.plots = S.plots.filter(x => !(x.type === 'task' && x.key.startsWith(pre) && !x.done));
+  S.panels = S.panels.filter(x => !(x.pid === p.id && !x.done));
+  Object.keys(S.doneManual).forEach(k => k.startsWith(pre) && delete S.doneManual[k]);
+  // new batch ids, so old tasks and boards no longer count toward the new run
+  p.batches.forEach(b => { b.id = uid(); b.panelDoneManual = 0; if (p.owner === 'internal') b.live = false; else delete b.live; });
+  p.good = 0; p.archived = false; p.live = false; p.round = (p.round || 1) + 1; p.createdAt = Date.now();
+  S.projects = [p, ...S.projects.filter(x => x !== p)];
+}
 const activeProjects = () => S.projects.filter(p => !p.archived);
 const filteredProjects = () => activeProjects().filter(p => (UI.fOwner === 'all' || p.owner === UI.fOwner) && (UI.fCat === 'all' || p.cat === UI.fCat));
 function waitingFor(t, pm){
@@ -982,7 +995,7 @@ function projectTile(p, pm){
     <div class="prog"><span class="pl">Tahapan</span>${progBar(st.done, st.planned, st.total)}<span class="pv">${st.pct}%</span></div>
     <div class="prog"><span class="pl">Pcs jadi</span>${pcsBar(ps.good, ps.target)}<span class="pv">${ps.good}/${ps.target}</span></div>
     <div class="tile-foot">${deadlineBadge(p, st)}${sf ? `<span class="badge b-late">Kurang ${sf} pcs</span>` : ''}<div class="grow"></div>
-      ${live ? '' : `<button class="btn sm go" data-act="startProj" data-id="${p.id}">▶ Mulai produksi</button>`}</div></div>`;
+      ${p.archived ? restartBtn(p) : live ? '' : `<button class="btn sm go" data-act="startProj" data-id="${p.id}">▶ Mulai produksi</button>`}</div></div>`;
 }
 
 function projectCard(p, pm, open){
@@ -1020,7 +1033,7 @@ function projectCard(p, pm, open){
     ${p.notes ? `<div class="small muted" style="margin-top:6px">📝 ${esc(p.notes)}</div>` : ''}
     ${sf ? `<div class="banner" style="margin:10px 0 0">Semua batch sudah selesai, tapi pcs jadi masih kurang <b>${sf} pcs</b> dari target ${ps.target}.</div>` : ''}
     <div class="proj-foot">${isLive(p) && p.batches.some(b => !batchOn(p, b)) ? `<button class="btn sm go" data-act="batchStartAll" data-pid="${p.id}">▶ Mulai semua batch (${p.batches.filter(b => !batchOn(p, b)).length})</button>` : ''}<button class="btn sm pri" data-act="addBatch" data-id="${p.id}">+ Tambah batch${sf ? ` (kurang ${sf} pcs)` : ''}</button><button class="btn sm" data-act="editProj" data-id="${p.id}">Edit</button>
-      <button class="btn sm" data-act="archiveProj" data-id="${p.id}">${p.archived ? 'Aktifkan lagi' : 'Arsipkan'}</button>
+      ${p.archived ? restartBtn(p) : ''}<button class="btn sm" data-act="archiveProj" data-id="${p.id}">${p.archived ? 'Aktifkan lagi' : 'Arsipkan'}</button>
       ${isLive(p) ? `<button class="btn sm stop" data-act="pauseProj" data-id="${p.id}" title="Keluarkan dari antrian Plotting & Panel">■ Stop produksi</button>` : ''}
       <button class="btn sm ghost danger" data-act="delProj" data-id="${p.id}">Hapus</button></div>
   </div></div>`;
@@ -1483,6 +1496,14 @@ const ACT = {
   toggleArchived: () => { UI.showArchived = !UI.showArchived; render(); },
   newProj: () => openProjectForm(),
   editProj: d => openProjectForm(d.id),
+  restartProj: d => {
+    const p = S.projects.find(x => x.id === d.id);
+    ask(`Mulai lagi "${projName(p)}" dari 0? Detail proyek, batch, dan papannya tetap sama. Progress tahapan, papan, dan pcs jadi kembali ke 0. Pekerjaan yang sudah selesai tetap tersimpan sebagai riwayat.`, 'Mulai lagi', () => {
+      restartProject(p); UI.showArchived = false; UI.openProj = p.id; UI.collapsed[p.id] = false;
+      commit(`${projName(p)} siap dimulai lagi (putaran ${p.round}). Tekan Mulai produksi kalau sudah siap.`);
+      setTimeout(() => document.querySelector(`[data-act="toggleProj"][data-id="${p.id}"]`)?.scrollIntoView({behavior: 'smooth', block: 'start'}), 30);
+    });
+  },
   archiveProj: d => { const p = S.projects.find(x => x.id === d.id); p.archived = !p.archived; commit(p.archived ? 'Proyek diarsipkan' : 'Proyek aktif lagi'); },
   delProj: d => {
     const p = S.projects.find(x => x.id === d.id);
