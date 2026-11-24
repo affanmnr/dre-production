@@ -783,7 +783,10 @@ function projStats(p, pm = plotMap()){
 function needOf(p, b){ return +(b.panelNeeded != null ? b.panelNeeded : b.qty) || 0; }
 // project name plus the batch's own product type, when a multi-colour project has one
 // e.g. "12 papan Merah Kartu", so whoever does the task knows which boards to take
-const papanLabel = (p, b) => needOf(p, b) + ' papan' + ((b.pattern || p.pattern) ? ' ' + (b.pattern || p.pattern) : '');
+const sizeOf = (p, b) => (b && b.size) || p.size || '';
+// thickness only needs saying when the project mixes several
+const sizeTag = (p, b) => b && b.size && b.size !== p.size ? ' ' + b.size : '';
+const papanLabel = (p, b) => needOf(p, b) + ' papan' + ((b.pattern || p.pattern) ? ' ' + (b.pattern || p.pattern) : '') + sizeTag(p, b);
 const prodName = (p, b) => projName(p) + (b && b.product ? ' – ' + b.product : '');
 const panelTotal = p => p.batches.reduce((a, b) => a + needOf(p, b), 0);
 // real finished pieces are counted by hand per project; target is the project qty
@@ -1031,7 +1034,7 @@ function projectCard(p, pm, open){
     const d = panelDone(b), pp = panelPlanned(b), need = needOf(p, b);
     return `<tr class="${isLive(p) && !batchOn(p, b) ? 'b-off' : ''}"><td class="l"><div class="bl"><b>${batchLabel(p, bi)}</b>${isLive(p) && p.owner === 'internal' ? (batchOn(p, b)
       ? `<button class="bchip on" data-act="batchStop" data-pid="${p.id}" data-bid="${b.id}" title="Stop batch ini: keluar dari Plotting & Panel">● Jalan</button>`
-      : `<button class="bchip" data-act="batchStart" data-pid="${p.id}" data-bid="${b.id}" title="Masukkan batch ini ke Plotting & Panel">▶ Mulai</button>`) : ''}</div><div class="small muted">${needOf(p, b)} papan${b.pattern || p.pattern ? ' · ' + esc(b.pattern || p.pattern) : ''}</div>${b.product ? `<div class="small" style="font-weight:600">${esc(b.product)}</div>` : ''}</td>
+      : `<button class="bchip" data-act="batchStart" data-pid="${p.id}" data-bid="${b.id}" title="Masukkan batch ini ke Plotting & Panel">▶ Mulai</button>`) : ''}</div><div class="small muted">${needOf(p, b)} papan${b.pattern || p.pattern ? ' · ' + esc(b.pattern || p.pattern) : ''}${sizeTag(p, b) ? ' · ' + esc(b.size) : ''}</div>${b.product ? `<div class="small" style="font-weight:600">${esc(b.product)}</div>` : ''}</td>
       <td class="pcol">${need ? `<div class="panelctl"><button class="icon-btn" data-act="panelAdj" data-pid="${p.id}" data-bid="${b.id}" data-d="-1">−</button><b style="color:${d >= need ? 'var(--green)' : 'inherit'}">${d}/${need}</b><button class="icon-btn" data-act="panelAdj" data-pid="${p.id}" data-bid="${b.id}" data-d="1">+</button></div>${pp ? `<div class="small muted" style="text-align:center">${pp} diplot</div>` : ''}` : '<span class="muted small">–</span>'}</td>${cells}</tr>`;
   }).join('');
   return `<div class="card proj${UI.sel.has(p.id) ? ' sel' : ''}">${head}<div class="proj-b">
@@ -1178,7 +1181,7 @@ PAGES.panel = () => {
     return `<div class="pgroup ${open ? 'open' : ''}">
       <button class="pg-h" data-act="panelGroup" data-id="${p.id}"><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m6 9 6 6 6-6"/></svg>
         <span class="grow"><b>${esc(projName(p))}</b><span class="s">${esc(p.size || '')} · ${items.length} batch</span></span><span class="badge" style="background:var(--amber-soft);color:var(--amber)">${tot} papan</span></button>
-      ${open ? items.map(n => `<div class="pg-batch"><div class="pg-bh"><b>${esc(n.b.pattern || p.pattern || 'Pattern?')}</b> <span class="s">· ${batchLabel(p, n.bi)}${n.b.product ? ' · ' + esc(n.b.product) : ''} · sisa <b style="color:var(--ink)">${n.rem}</b> papan</span></div>
+      ${open ? items.map(n => `<div class="pg-batch"><div class="pg-bh"><b>${esc(n.b.pattern || p.pattern || 'Pattern?')}${esc(sizeTag(p, n.b))}</b> <span class="s">· ${batchLabel(p, n.bi)}${n.b.product ? ' · ' + esc(n.b.product) : ''} · sisa <b style="color:var(--ink)">${n.rem}</b> papan</span></div>
           <div class="papans">${freePapanNos(p, n.b, n.rem).map(no => `<div class="papan" draggable="true" data-drag="need" data-pid="${p.id}" data-bid="${n.b.id}" data-qty="1" data-no="${no}" data-act="pickNeed" title="Papan #${no} ${esc(n.b.pattern || p.pattern || '')}: tarik ke mesin atau klik">#${no}</div>`).join('')}</div></div>`).join('')
         : `<div class="pg-sum">${Object.entries(byColor).map(([c, q]) => `<span class="pchip">${esc(c)} <b>${q}</b></span>`).join('')}</div>`}
     </div>`;
@@ -1394,12 +1397,12 @@ let F = null; // project form state
 function colorsOf(p){
   const list = [];
   p.batches.forEach(b => {
-    const pattern = b.pattern || p.pattern || '', product = b.product || '';
-    let c = list.find(x => x.pattern === pattern && x.product === product);
-    if (!c) list.push(c = {id:uid(), pattern, product, papan:0, nb:0});
+    const pattern = b.pattern || p.pattern || '', product = b.product || '', size = sizeOf(p, b);
+    let c = list.find(x => x.pattern === pattern && x.product === product && x.size === size);
+    if (!c) list.push(c = {id:uid(), pattern, product, size, papan:0, nb:0});
     c.papan += needOf(p, b); c.nb++; b.cid = c.id;
   });
-  if (!list.length) list.push({id:uid(), pattern:p.pattern || '', product:'', papan:0, nb:1});
+  if (!list.length) list.push({id:uid(), pattern:p.pattern || '', product:'', size:p.size || '10mm', papan:0, nb:1});
   return list;
 }
 // regroup F.batches by colour; colours in `split` ('all' or a Set of ids) get their papan spread evenly over their batches
@@ -1412,7 +1415,7 @@ function rebuildBatches(split){
     bs = bs.slice(0, n);
     if (split === 'all' || (split && split.has(c.id))) { const q = Math.max(0, Math.round(+c.papan || 0)); bs.forEach((b, i) => b.panelNeeded = Math.floor(q / n) + (i < q % n ? 1 : 0)); }
     c.papan = bs.reduce((a, b) => a + needOf(F, b), 0);
-    bs.forEach(b => { b.pattern = c.pattern; b.product = multi ? c.product : ''; });
+    bs.forEach(b => { b.pattern = c.pattern; b.product = multi ? c.product : ''; b.size = c.size; });
     out.push(...bs);
   });
   F.batches = out;
@@ -1432,16 +1435,16 @@ function renderProjectForm(){
     <div><label class="f">Kategori</label><div class="segctl"><button class="${F.cat === 'FN' ? 'on' : ''}" data-act="fSet" data-k="cat" data-v="FN">Furniture</button><button class="${F.cat === 'KYPT' ? 'on' : ''}" data-act="fSet" data-k="cat" data-v="KYPT">Keychain & Petite</button></div></div>
     ${F.owner === 'client' ? `<div><label class="f">Nama client</label><input type="text" data-f="client" value="${esc(F.client)}" list="clientList" placeholder="mis. CIMB"><datalist id="clientList">${clients.map(c => `<option value="${esc(c)}">`).join('')}</datalist></div>` : ''}
     <div class="${F.owner === 'client' ? '' : 'full'}"><label class="f">Nama produk</label><input type="text" data-f="name" value="${esc(F.name)}" placeholder="mis. Dropbox"></div>
-    <div><label class="f">Ketebalan</label><select data-f="size">${sizeOptions(F.size)}</select></div>
     <div><label class="f">Total qty (pcs)</label><input type="number" min="1" data-f="qty" value="${F.qty}"></div>
     <div><label class="f">Deadline</label><input type="date" data-f="deadline" value="${F.deadline}"></div>
     ${F.cat === 'FN' ? `<div><label class="f">Kayu dibutuhkan</label><input type="number" min="0" data-f="woodNeeded" value="${F.woodNeeded || 0}"></div><div><label class="f">Stok kayu</label><input type="number" min="0" data-f="woodStock" value="${F.woodStock || 0}"></div>` : ''}
     <div class="full"><label class="f">Tahapan yang dibutuhkan</label><div class="checks">${allSteps.map(s => `<label class="${F.steps.includes(s) ? 'on' : ''}"><input type="checkbox" ${F.steps.includes(s) ? 'checked' : ''} data-ch="fStep" data-s="${esc(s)}">${esc(s)}</label>`).join('')}</div></div>
     <div class="full"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><label class="f grow" style="margin:0">Warna papan</label>
       <button class="btn sm" data-act="fAddColor">+ Tambah warna</button></div>
-      <table class="btable"><thead><tr><th>Pattern / warna</th>${multi ? '<th>Jenis produk</th>' : ''}<th style="width:110px">Papan needed</th><th style="width:90px">Jumlah batch</th>${multi ? '<th style="width:28px"></th>' : ''}</tr></thead><tbody>
+      <table class="btable"><thead><tr><th>Pattern / warna</th>${multi ? '<th>Jenis produk</th>' : ''}<th style="width:96px">Ketebalan</th><th style="width:110px">Papan needed</th><th style="width:90px">Jumlah batch</th>${multi ? '<th style="width:28px"></th>' : ''}</tr></thead><tbody>
       ${F.colors.map((c, i) => `<tr><td><input type="text" value="${esc(c.pattern)}" data-cf="pattern" data-ci="${i}" placeholder="mis. Merah Kartu"></td>
         ${multi ? `<td><input type="text" value="${esc(c.product)}" data-cf="product" data-ci="${i}" placeholder="${esc(F.name || 'sama dengan nama produk')}"></td>` : ''}
+        <td><select data-cf="size" data-ch="fBatchPanel" data-ci="${i}">${sizeOptions(c.size)}</select></td>
         <td><input type="number" min="0" value="${c.papan}" data-cf="papan" data-ch="fColorSplit" data-ci="${i}"></td>
         <td><input type="number" min="1" max="30" value="${c.nb}" data-cf="nb" data-ch="fColorSplit" data-ci="${i}"></td>
         ${multi ? `<td><button class="icon-btn" data-act="fDelColor" data-ci="${i}" title="Hapus warna ini">✕</button></td>` : ''}</tr>`).join('')}
@@ -1450,7 +1453,7 @@ function renderProjectForm(){
     <div class="full"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><label class="f grow" style="margin:0">Batch</label>
       <button class="btn sm" data-act="fSplit">Bagi rata papan</button></div>
       <table class="btable"><thead><tr><th></th><th>Warna</th><th style="width:110px">Papan needed</th></tr></thead><tbody>
-      ${F.batches.map((b, i) => { const c = F.colors.find(x => x.id === b.cid) || {}; return `<tr><td class="small muted" style="white-space:nowrap">Batch ${i + 1}</td><td class="small">${esc(c.pattern || '–')}${multi && c.product ? ' · ' + esc(c.product) : ''}</td><td><input type="number" min="0" value="${needOf(F, b)}" data-bf="panelNeeded" data-ch="fBatchPanel" data-i="${i}"></td></tr>`; }).join('')}
+      ${F.batches.map((b, i) => { const c = F.colors.find(x => x.id === b.cid) || {}; return `<tr><td class="small muted" style="white-space:nowrap">Batch ${i + 1}</td><td class="small">${esc(c.pattern || '–')}${multi && c.product ? ' · ' + esc(c.product) : ''} · ${esc(c.size)}</td><td><input type="number" min="0" value="${needOf(F, b)}" data-bf="panelNeeded" data-ch="fBatchPanel" data-i="${i}"></td></tr>`; }).join('')}
       </tbody></table></div>
     <div class="full"><label class="f">Catatan</label><textarea rows="2" data-f="notes">${esc(F.notes)}</textarea></div></div>`;
   modal(F._new ? 'Proyek baru' : 'Edit proyek', body, `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveProj">Simpan</button>`, true);
@@ -1534,7 +1537,7 @@ const ACT = {
     const p = S.projects.find(x => x.id === d.id), last = p.batches[p.batches.length - 1] || {}, sf = shortfall(p);
     const cols = colorsOf(JSON.parse(JSON.stringify(p))), lastPat = last.pattern || p.pattern || '';
     modal(`Tambah batch · ${esc(projName(p))}`, `<div class="fgrid">
-      ${cols.length > 1 ? `<div><label class="f">Warna papan</label><select id="nbColor">${cols.map((c, i) => `<option value="${i}" ${c.pattern === lastPat && c.product === (last.product || '') ? 'selected' : ''}>${esc(c.pattern)}${c.product ? ' · ' + esc(c.product) : ''}</option>`).join('')}</select></div>` : ''}
+      ${cols.length > 1 ? `<div><label class="f">Warna papan</label><select id="nbColor">${cols.map((c, i) => `<option value="${i}" ${c.pattern === lastPat && c.product === (last.product || '') && c.size === sizeOf(p, last) ? 'selected' : ''}>${esc(c.pattern)}${c.product ? ' · ' + esc(c.product) : ''} · ${esc(c.size)}</option>`).join('')}</select></div>` : ''}
       <div><label class="f">Papan needed</label><input type="number" id="nbQty" min="1" value="${needOf(p, last) || 1}"></div></div>
       ${p.owner === 'internal' ? `<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:13px;cursor:pointer"><input type="checkbox" id="nbLive" ${isLive(p) ? 'checked' : ''} style="accent-color:var(--green);width:16px;height:16px">Langsung mulai batch ini (masuk Plotting & Panel)</label>` : ''}${sf ? `<p class="small muted">Pcs jadi masih kurang ${sf} pcs.</p>` : ''}`,
       `<button class="btn ghost" data-act="closeModal">Batal</button><button class="btn pri" data-act="saveBatch" data-id="${p.id}">Tambah batch ${p.batches.length + 1}</button>`);
@@ -1544,7 +1547,7 @@ const ACT = {
     const p = S.projects.find(x => x.id === d.id);
     const qty = Math.max(1, +document.getElementById('nbQty').value || 1);
     const cols = colorsOf(JSON.parse(JSON.stringify(p))), sel = document.getElementById('nbColor'), c = cols[sel ? +sel.value : 0] || {};
-    p.batches.push({id:uid(), panelNeeded:qty, panelDoneManual:0, pattern:c.pattern || '', product:c.product || '', live:!!document.getElementById('nbLive')?.checked});
+    p.batches.push({id:uid(), panelNeeded:qty, panelDoneManual:0, pattern:c.pattern || '', product:c.product || '', size:c.size || p.size || '', live:!!document.getElementById('nbLive')?.checked});
     UI.collapsed[p.id] = false; closeModal(); commit(`Batch ${p.batches.length} ditambahkan, tahapannya masuk antrian`);
   },
   panelAdj: d => { const p = S.projects.find(x => x.id === d.pid), b = p.batches.find(x => x.id === d.bid); b.panelDoneManual = Math.max(0, (b.panelDoneManual || 0) + (+d.d)); commit(); },
@@ -1634,7 +1637,7 @@ const ACT = {
   // project form
   fSet: d => { F[d.k] = d.v; if (d.k === 'cat') F.steps = [...S.steps[d.v]]; renderProjectForm(); },
   fSplit: () => { rebuildBatches('all'); renderProjectForm(); },
-  fAddColor: () => { F.colors.push({id:uid(), pattern:'', product:'', papan:0, nb:1}); rebuildBatches(null); renderProjectForm(); setTimeout(() => document.querySelectorAll('[data-cf="pattern"]')[F.colors.length - 1]?.focus(), 20); },
+  fAddColor: () => { F.colors.push({id:uid(), pattern:'', product:'', size:F.colors[F.colors.length - 1].size, papan:0, nb:1}); rebuildBatches(null); renderProjectForm(); setTimeout(() => document.querySelectorAll('[data-cf="pattern"]')[F.colors.length - 1]?.focus(), 20); },
   fDelColor: d => { if (F.colors.length < 2) return; F.colors.splice(+d.ci, 1); rebuildBatches(null); renderProjectForm(); },
   saveProj: () => {
     if (!F.name.trim()) return toast('Nama produk wajib diisi');
@@ -1645,6 +1648,7 @@ const ACT = {
     if (F.owner === 'internal') F.client = '';
     rebuildBatches(null);
     F.pattern = [...new Set(F.colors.map(c => c.pattern.trim()).filter(Boolean))].join(', ');
+    F.size = [...new Set(F.colors.map(c => c.size).filter(Boolean))].join(', ');
     F.batches.forEach(b => { b.panelNeeded = needOf(F, b); b.pattern = (b.pattern || '').trim(); b.product = (b.product || '').trim(); delete b.qty; delete b.cid; });
     delete F.colors; delete F.panelTotal;
     const i = S.projects.findIndex(x => x.id === F.id);
@@ -1698,7 +1702,7 @@ function addNeedToMachine(pid, bid, mid, date, qty, no){
   const rem = Math.max(1, (needOf(p, b)) - panelDone(b) - panelPlanned(b)), q = qty ? Math.min(qty, rem) : rem;
   if (no && S.panels.some(x => x.batchId === bid && +x.no === +no)) no = freePapanNos(p, b, 1)[0];
   const pattern = b.pattern || p.pattern || '?';
-  S.panels.push(Object.assign({id:uid(), date:date || UI.panelDate, machine:mid, pattern, size:p.size || '', qty:q, pid, batchId:bid, done:false}, no ? {no:+no} : {}));
+  S.panels.push(Object.assign({id:uid(), date:date || UI.panelDate, machine:mid, pattern, size:sizeOf(p, b), qty:q, pid, batchId:bid, done:false}, no ? {no:+no} : {}));
   commit(`${no ? 'Papan #' + no + ' ' + pattern : q + ' papan'} → ${S.machines.find(m => m.id === mid)?.name} · ${fmtDate(date || UI.panelDate)}`);
 }
 function download(name, text, type){
